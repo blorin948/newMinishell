@@ -1,22 +1,44 @@
 
 #include "minishell.h"
 
+void free_all(t_cmd *cmd)
+{
+	t_cmd *tmp;
+	while (cmd)
+	{
+		tmp = cmd;
+		cmd = cmd->next;
+		free(tmp);
+	}
+	cmd = NULL;
+}
+
 void print(t_cmd *cmd)
 {
     int i = 0;
+char **tab;
 
-    while (cmd->next)
+    while (cmd)
     {
-    //    printf("%s in = %d  out = %d  len = %d\n", cmd->line, cmd->in, cmd->out, cmd->len);
+		printf("test %d = %s\n", i, cmd->line);
+		if (cmd->redi_out)
+		{
+			tab = cmd->redi_out;
+			while (tab[i])
+				printf("|%s|\n", tab[i++]);
+		i = 0;
+		}
         cmd = cmd->next;
     }
-	printf("%s in = %d  out = %d len = %d\n", cmd->line, cmd->in, cmd->out, cmd->len);
-	if (cmd->redi_out)
+	//printf("test %d = %s\n", i, cmd->line);
+	/*if (cmd->redi_in)
 	{
-	char **tab = cmd->split;
+	char **tab = cmd->redi_in;
 	while (tab[i])
 		printf("|%s|\n", tab[i++]);
-	}
+	}*/
+	//free_all(cmd);
+	//free_all(cmd);
 }
 
 
@@ -25,7 +47,7 @@ void display_prompt(void)
     ft_putstr_fd("prompteur : ", 1);
 }
 
-int line_cpy(t_cmd *cmd, char *line, int end, int start)
+char *line_cpy(t_cmd *cmd, char *line, int end, int start)
 {
     char *new;
     int i = 0;
@@ -34,12 +56,14 @@ int line_cpy(t_cmd *cmd, char *line, int end, int start)
         return (0);
 	if (line[end] == '|')
 	{
-    	while (start <= end)
+		cmd->in == 2;
+    	while (start < end)
     	{
         	cmd->line[i] = line[start];
         	start++;
      	   i++;
     	}
+		//printf("%d  %d   %c\n", start, end, cmd->line[i]);
 	}
 	else if (line[end] == ';')
 	{
@@ -55,17 +79,18 @@ int line_cpy(t_cmd *cmd, char *line, int end, int start)
 	{
 		while (start < end)
     	{
+			//printf("test 2\n");
         	cmd->line[i] = line[start];
         	start++;
      	   i++;
     	}
 	}
-	
-    cmd->line[i] = '\0'; 
+    cmd->line[i] = '\0';
 }
 
-void split_words(char *line, t_env *env)
+t_cmd *split_words(char *line, t_env *env)
 {
+	t_cmd *new;
     int start = 0;
     int end = 0;
     int i = 0;
@@ -88,7 +113,7 @@ void split_words(char *line, t_env *env)
             else
                 cro = 0;
         }
-        if ((line[i] == '|' || line[i] == ';') && cro == 0 && guill == 0)
+        if (line[i] == '|' && cro == 0 && guill == 0)
         {
             end = i;
             line_cpy(create_cmd(env), line, end, start);
@@ -98,6 +123,7 @@ void split_words(char *line, t_env *env)
     }
     end = i;
     line_cpy(create_cmd(env), line, end, start);
+//	printf("start = %c end = %c\n", line[start], line[end - 1]);
 }
 
 char *remove_pipe2(char *line, int in, int out, int len)
@@ -403,7 +429,6 @@ void count_len(t_cmd *cmd)
 		if (new[i] == '>' && cro == 0 && guill == 0)
 		{
 			cmd->out_len++;
-			printf("test\n");
 			k = count_len2(new, i);
 			tmp = tmp + k;
 			i = i + k - 1;
@@ -424,7 +449,7 @@ char *fill_tab(char *line, int i, int len, char redir)
 {
 	char *tab;
 	int a = 0;
-	if (!(tab = malloc(sizeof(char) * len + 1)))
+	if (!(tab = malloc(sizeof(char) * len + 2)))
 		return (NULL);
 	while (line[i] && line[i] == redir)
 	{
@@ -432,11 +457,11 @@ char *fill_tab(char *line, int i, int len, char redir)
 		i++;
 		a++;
 	}
+	tab[a] = ' ';
+	a++;
 	while (line[i] && line[i] == ' ')
 	{
-		tab[a] = line[i];
 		i++;
-		a++;
 	}
 	while (line[i])
 	{
@@ -472,6 +497,46 @@ char *fill_tab(char *line, int i, int len, char redir)
 	
 }
 
+int count_len_redir(char *line, int i)
+{
+	int count = i;
+	int c = 0;
+	while (line[i] && line[i] == '>')
+		i++;
+	while (line[i] && line[i] == '<')
+		i++;
+	while (line[i] && line[i] == ' ')
+	{
+		i++;
+		c++;
+	}
+	while (line[i])
+	{
+		while (line[i] == '\'')
+		{
+			i++;
+			while (line[i] && line[i] != '\'')
+				i++;
+			i++;
+		}
+		while (line[i] == '"')
+		{
+			i++;
+			while (line[i] && line[i] != '"')
+				i++;
+			i++;
+		}
+		if (ft_isalnum(line[i]) != 1 && line[i] != '"' && line[i] != '\'')
+		{
+			
+			return (i - count - c);
+		}
+		i++;
+	}
+	//printf("i = %d count = %d  la = %d\n", i, count ,i - count);
+	return (i - count - c);
+}
+
 char **create_tab_redir(t_cmd *cmd, int len, char redir)
 {
 	char **tab;
@@ -481,7 +546,7 @@ char **create_tab_redir(t_cmd *cmd, int len, char redir)
 	int k = 0;
 	int cro = 0;
 	int guill = 0;
-	if (!(tab = malloc(sizeof(char *) * len)))
+	if (!(tab = malloc(sizeof(char *) * len + 1)))
 		return (NULL);
 	while (new[i])
 	{
@@ -501,7 +566,7 @@ char **create_tab_redir(t_cmd *cmd, int len, char redir)
 		}
 		if (new[i] == redir && cro == 0 && guill == 0)
 		{
-			k = count_len2(new, i);
+			k = count_len_redir(new, i);
 			tab[a] = fill_tab(new, i, k, redir);
 			a++;
 			i = i + k - 1;
@@ -514,6 +579,7 @@ char **create_tab_redir(t_cmd *cmd, int len, char redir)
 
 int copy_redir(t_cmd *cmd)
 {
+	int i = 0;
 	if (cmd->out_len != 0)
 		cmd->redi_out = create_tab_redir(cmd, cmd->out_len, '>');
 	if (cmd->in_len != 0)
@@ -596,11 +662,13 @@ int split_rest(t_cmd *cmd)
 			while (line[i] && line[i] != '"')
 				new[a++] = line[i++];
 		}
-		if (line[i] == '>' || line[i] == '<')
+		while (line[i] == '>' || line[i] == '<')
 		{
 			i = i + count_len2(line, i);
 		}
-		new[a++] = line[i++];
+		new[a] = line[i];
+		a++;
+		i++;
 	}
 	new[a] = '\0';
 	//cmd->line = new;
@@ -608,7 +676,6 @@ int split_rest(t_cmd *cmd)
 	cmd->line = new;
 	cmd->split = ft_split(new, ' ');
 	cmd->split = remake(cmd->split);
-
 }
 
 char **parse_hook_split(t_cmd *cmd)
@@ -616,29 +683,140 @@ char **parse_hook_split(t_cmd *cmd)
 	int i = 0;
 	int a = 0;
 	int k = 0;
-	count_len(cmd);
+count_len(cmd);
 	copy_redir(cmd);
 	split_rest(cmd);
+	i = 0;
+}
+
+int check_error_redir(char **tab)
+{
+	int i = 0;
+	int a = 0;
+	while (tab[a])
+	{
+		while (tab[a][i] == '>')
+		{
+			i++;
+		}
+		if (i != 1 && i != 2)
+		{
+			printf("error\n");
+			return (0);
+		}
+		a++;
+	}
+}
+
+int is_double(char *str)
+{
+	int i = 0;
+	while (str[i] == '>')
+		i++;
+	if (i == 2)
+		return (1);
+	else 
+	return (0);
+	
+}
+
+char *get_name(char *str)
+{
+	int i = 0;
+	int a = 0;
+	char *new;
+	while (str[i] == '>')
+		i++;
+	i++;
+	if (!(new = malloc(sizeof(char) * ft_strlen(str) - i + 1)))
+		return (NULL);
+	while (str[i])
+	{
+		new[a++] = str[i++];
+	}
+	new[a] = '\0';
+	return (new);
+}
+
+int create_fd(t_cmd *cmd)
+{
+	int i = 0;
+	int a = 0;
+	char **tab = cmd->redi_out;
+	if (!(cmd->redi_out))	
+		return (1);
+	check_error_redir(tab);
+	while (a < cmd->out_len - 1)
+	{
+	if (is_double(tab[a]) == 0)
+		open(get_name(tab[a]), O_RDWR | O_CREAT | O_TRUNC,S_IRWXU);
+	else
+		open(get_name(tab[a]), O_RDWR | O_CREAT | O_APPEND,S_IRWXU);
+	a++;		
+	}
+	if (is_double(tab[a]) == 0)
+		cmd->fd = open(get_name(tab[a]), O_RDWR | O_CREAT | O_TRUNC,S_IRWXU);
+	else
+		cmd->fd = open(get_name(tab[a]), O_RDWR | O_CREAT | O_APPEND,S_IRWXU);
 }
 
 int parse_all(t_env *env)
 {
     t_cmd *cmd;
     int i = 0;
-	i = TRUE;
     cmd = env->cmd;
     while (cmd)
     {
 		remove_pipe_virgul(cmd);
 		cmd->line = parse_dollars(cmd, env);
 		cmd->split = parse_hook_split(cmd);
+		create_fd(cmd);
+		printf("in = %d out = %d\n", cmd->in, cmd->out);
 		cmd = cmd->next;
+		i = 0;
     }
+}
+
+char *split_line(char *str)
+{
+	char *new;
+	static int i =0;
+	int a = i;
+	if (str[i] == '\0')
+	{
+		i = 0;
+		return (NULL);
+	}
+
+	while (str[i] && str[i] != ';')
+	{
+		while (str[i] == '"')
+		{
+			i++;
+			while (str && str[i] != '"')
+				i++;
+			i++;
+		}
+		while (str[i] == '\'')
+		{
+			i++;
+			while (str && str[i] != '\'')
+				i++;
+			i++;
+		}
+		if (str[i] != ';')
+		i++;
+	}
+	new = ft_substr(str, a, i - a);
+	if (str[i] != '\0')
+		i++;
+	return (new);
 }
 
 int     main(int ac, char **av, char **envir)
 {
     char *line = NULL;
+	char *s_line = NULL;
     t_env *env;
 	int i = 0;
     if (!(env = malloc(sizeof(t_env))))
@@ -650,9 +828,12 @@ int     main(int ac, char **av, char **envir)
 
     display_prompt();
     get_next_line(0, &line);
-    split_words(line, env);
-    parse_all(env);
-	print(env->cmd);
-    return (0);
+	//while ((s_line = split_line(line)) != NULL)
+	//{
+    	split_words(line, env);
+    	parse_all(env);
+	
+		//print(env->cmd);
+	//}
     }
 }
