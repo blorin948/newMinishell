@@ -1,16 +1,17 @@
 
 #include "minishell.h"
 
-void free_all(t_cmd *cmd)
+void free_all(t_env *env)
 {
 	t_cmd *tmp;
-	while (cmd)
+
+	while (env->cmd)
 	{
-		tmp = cmd;
-		cmd = cmd->next;
+		tmp = env->cmd;
+		env->cmd = env->cmd->next;
 		free(tmp);
 	}
-	cmd = NULL;
+	env->cmd = NULL;
 }
 
 void print(t_cmd *cmd)
@@ -745,7 +746,10 @@ int create_fd(t_cmd *cmd)
 	char **tab = cmd->redi_out;
 	if (!(cmd->redi_out))	
 		return (1);
+	if (cmd->out_len < 1)
+		return (0);
 	check_error_redir(tab);
+
 	while (a < cmd->out_len - 1)
 	{
 	if (is_double(tab[a]) == 0)
@@ -767,14 +771,19 @@ int parse_all(t_env *env)
     cmd = env->cmd;
     while (cmd)
     {
+		//printf("test1\n");
+		//printf(" la = %s\n", cmd->line);
 		remove_pipe_virgul(cmd);
 		cmd->line = parse_dollars(cmd, env);
 		cmd->split = parse_hook_split(cmd);
+
 		create_fd(cmd);
-		printf("in = %d out = %d\n", cmd->in, cmd->out);
+	//	while (cmd->split[i])
+//printf("%s\n", cmd->split[i++]);
 		cmd = cmd->next;
 		i = 0;
     }
+	printf("lol\n");
 }
 
 char *split_line(char *str)
@@ -828,12 +837,13 @@ int     main(int ac, char **av, char **envir)
 
     display_prompt();
     get_next_line(0, &line);
-	//while ((s_line = split_line(line)) != NULL)
-	//{
-    	split_words(line, env);
+	while ((s_line = split_line(line)) != NULL)
+	{
+    	split_words(s_line, env);
     	parse_all(env);
 	
 		//print(env->cmd);
-	//}
+		free_all(env);
+	}
     }
 }
