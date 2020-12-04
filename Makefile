@@ -10,7 +10,12 @@ HEADERS = minishell.h
 SRC =	main.c\
 		get_next_line.c\
 		create.c\
-		init.c
+		init.c\
+		exec.c\
+		create_path.c\
+		find_builtin.c\
+		fonctions_annexe.c\
+		echo.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 

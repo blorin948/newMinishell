@@ -582,9 +582,15 @@ void copy_redir(t_cmd *cmd)
 {
 	int i = 0;
 	if (cmd->out_len != 0)
+	{
 		cmd->redi_out = create_tab_redir(cmd, cmd->out_len, '>');
+		cmd->out = 3;
+	}
 	if (cmd->in_len != 0)
+	{
 		cmd->redi_in = create_tab_redir(cmd, cmd->in_len, '<');
+		cmd->in = 3;
+	}
 }
 
 char    *split_rest2(char *str)
@@ -723,12 +729,12 @@ int is_double(char *str)
 	
 }
 
-char *get_name(char *str)
+char *get_name(char *str, char c)
 {
 	int i = 0;
 	int a = 0;
 	char *new;
-	while (str[i] == '>')
+	while (str[i] == c)
 		i++;
 	i++;
 	if (!(new = malloc(sizeof(char) * ft_strlen(str) - i + 1)))
@@ -750,21 +756,76 @@ int create_fd(t_cmd *cmd)
 		return (1);
 	if (cmd->out_len < 1)
 		return (0);
+	cmd->out = 3;
 	check_error_redir(tab);
 
 	while (a < cmd->out_len - 1)
 	{
 	if (is_double(tab[a]) == 0)
-		open(get_name(tab[a]), O_RDWR | O_CREAT | O_TRUNC,S_IRWXU);
+		open(get_name(tab[a], '>'), O_RDWR | O_CREAT | O_TRUNC,S_IRWXU);
 	else
-		open(get_name(tab[a]), O_RDWR | O_CREAT | O_APPEND,S_IRWXU);
+		open(get_name(tab[a], '>'), O_RDWR | O_CREAT | O_APPEND,S_IRWXU);
 	a++;		
 	}
 	if (is_double(tab[a]) == 0)
-		cmd->fd = open(get_name(tab[a]), O_RDWR | O_CREAT | O_TRUNC,S_IRWXU);
+		cmd->fd = open(get_name(tab[a], '>'), O_RDWR | O_CREAT | O_TRUNC,S_IRWXU);
 	else
-		cmd->fd = open(get_name(tab[a]), O_RDWR | O_CREAT | O_APPEND,S_IRWXU);
+		cmd->fd = open(get_name(tab[a], '>'), O_RDWR | O_CREAT | O_APPEND,S_IRWXU);
 	return (1);
+}
+
+void add_id(t_env *env)
+{
+	int i = 1;
+	t_cmd *cmd = env->cmd;
+	while (cmd)
+	{
+		cmd->id = i;
+		i++;
+		cmd = cmd->next;
+	}
+	env->nbr = i - 1;
+}
+
+void check_in_out(t_cmd *cmd, t_env *env)
+{
+	int i = 0;
+	//while (cmd->split[i])
+	//		printf("out = %d in =  %d rest = |%s|\n", cmd->out, cmd->in, cmd->split[i++]);
+	//printf("id = %d  nbr = %d\n", cmd->id, env->nbr);
+		i = 0;
+	if (cmd->id == 1 && cmd->id != env->nbr)
+	{
+		cmd->out = 2;
+	}
+	if (cmd->id != 1 && cmd->id != env->nbr)
+	{
+		cmd->out = 2;
+		cmd->in = 2;
+	}
+	if (cmd->id != 1 && cmd->id == env->nbr)
+	{
+		cmd->in = 2;
+	}
+}
+
+int check_in_fd(t_cmd *cmd)
+{
+	int i = 0;
+	struct stat s;
+	if (cmd->in_len < 1)
+		return (0);
+	while (cmd->redi_in[i])
+	{
+		if (stat(get_name(cmd->redi_in[i], '<'), &s) == -1)
+		{
+			printf("jdois encore gerer l'erreur\n");
+			return (1);
+		}
+	i++;
+	}
+	i--;
+	cmd->fd_in = open(get_name(cmd->redi_in[i], '<'), O_RDONLY,S_IRWXU);
 }
 
 void parse_all(t_env *env)
@@ -772,21 +833,25 @@ void parse_all(t_env *env)
     t_cmd *cmd;
     int i = 0;
     cmd = env->cmd;
-    while (cmd)
+	add_id(env);
+	while (cmd)
     {
 		remove_pipe_virgul(cmd);
 		cmd->line = parse_dollars(cmd, env);
 		parse_hook_split(cmd);
+		check_in_out(cmd, env);
 		create_fd(cmd);
-		while (cmd->split[i])
-			printf("out = %d  rest = |%s|\n", cmd->out, cmd->split[i++]);
+		check_in_fd(cmd);
+
+		//while (cmd->redi_in[i])
+		//printf("out = %d in =  %d rest = |%s|\n", cmd->out, cmd->in, cmd->redi_in[i++]);
 		i = 0;
-		if (cmd->redi_out > 0)
+		/*if (cmd->redi_out > 0)
 		{
 			while (cmd->redi_out[i])
 				printf("redi = |%s|\n", cmd->redi_out[i++]);
 		}
-		cmd = cmd->next;
+*/		cmd = cmd->next;
 		i = 0;
     }
 }
@@ -827,6 +892,7 @@ char *split_line(char *str)
 	return (new);
 }
 
+
 int     main(int ac, char **av, char **envir)
 {
     char *line = NULL;
@@ -845,6 +911,7 @@ int     main(int ac, char **av, char **envir)
 	{
     	split_words(s_line, env);
     	parse_all(env);
+		exec(env);
 		//print(env->cmd);
 		free_all(env);
 	}
