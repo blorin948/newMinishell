@@ -15,7 +15,9 @@ SRC =	main.c\
 		create_path.c\
 		find_builtin.c\
 		fonctions_annexe.c\
-		echo.c
+		echo.c\
+		export.c\
+		unset.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 

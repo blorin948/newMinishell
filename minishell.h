@@ -20,6 +20,7 @@ typedef struct s_env
     struct s_cmd *cmd;
 	char **envir;
 	int nbr;
+	char **export;
 } t_env;
 
 typedef struct s_cmd
@@ -45,7 +46,13 @@ typedef struct s_cmd
 }t_cmd;
 
 void ft_putstr(char *str);
-int is_builtin(t_cmd *cmd, t_env *env);
+char **create_export(char **tab);
+char	*find_path(t_env *env, char *str);
+int cd_cmd(t_cmd *cmd, t_env *env);
+int is_builtin(t_cmd *cmd);
+int unset_cmd(t_cmd *cmd, t_env *env);
+int export_cmd(t_cmd *cmd, t_env *env);
+int find_builtin(t_cmd *cmd, t_env *env);
 int echo_cmd(t_cmd *cmd);
 int ft_strcmp(char *str1, char *str2);
 int create_path(t_env *env, t_cmd *cmd);

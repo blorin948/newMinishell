@@ -225,18 +225,34 @@ int remove_pipe_virgul(t_cmd *cmd)
 	return (1);
 }
 
+int comp_var2(char *str, char *var)
+{
+	int i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	if (i != ft_strlen(var))
+		return (0);
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if (str[i] != var[i])
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 char   *comp_var(char *var, t_env *env)
 {
   int i = 0;
   int n = 0;
   int a = 0;
   char *new;
-//    printf("%s\n", var);
   while (env->envir[a] && n == 0)
   {
       while (env->envir[a][i] && env->envir[a][i] != '=')
         i++;
-       if (ft_strncmp(env->envir[a], var, i) == 0)
+       if (comp_var2(env->envir[a], var) == 1)
        {
           new = ft_strdup(env->envir[a] + (i + 1));
           n++;
@@ -291,8 +307,6 @@ char *replace_var(char *cmd, char *var, int i, t_env *env)
   }
    int k = 0;
   a = i + a + 1;
-  /*if (var == NULL)
-    i = i + 2;*/
   if (var != NULL)
   {
     while (var[k]) 
@@ -842,16 +856,13 @@ void parse_all(t_env *env)
 		check_in_out(cmd, env);
 		create_fd(cmd);
 		check_in_fd(cmd);
-
-		//while (cmd->redi_in[i])
-		//printf("out = %d in =  %d rest = |%s|\n", cmd->out, cmd->in, cmd->redi_in[i++]);
-		i = 0;
-		/*if (cmd->redi_out > 0)
+	/*	while (cmd->split[i])
 		{
-			while (cmd->redi_out[i])
-				printf("redi = |%s|\n", cmd->redi_out[i++]);
-		}
-*/		cmd = cmd->next;
+		
+				printf("%s\n", cmd->split[i]);
+			i++;
+		}*/
+	cmd = cmd->next;
 		i = 0;
     }
 }
@@ -861,6 +872,8 @@ char *split_line(char *str)
 	char *new;
 	static int i =0;
 	int a = i;
+	if (str == NULL)
+		return (NULL);
 	if (str[i] == '\0')
 	{
 		i = 0;
@@ -892,6 +905,37 @@ char *split_line(char *str)
 	return (new);
 }
 
+int check_hook(char *str)
+{
+	int i = 0;
+	while (str[i])
+	{
+		while (str[i] == '\'')
+		{
+			i++;
+		
+			while (str[i] && str[i] != '\'')
+			{
+				
+				i++;
+			}
+			if (str[i] == '\0')
+				return (1);
+			i++;
+		}
+		while (str[i] == '"')
+		{
+			i++;
+			while (str[i] && str[i] != '"')
+				i++;
+			if (str[i] == '\0')
+				return (1);
+			i++;
+		}
+		i++;
+	}
+	return (0);
+}
 
 int     main(int ac, char **av, char **envir)
 {
@@ -903,10 +947,17 @@ int     main(int ac, char **av, char **envir)
         return (0);
 	env->cmd = NULL;
 	env->envir = envir;
+	i = 0;
+	env->export = create_export(env->envir);
     while (1)
     {
 	display_prompt();
     get_next_line(0, &line);
+	if (check_hook(line) != 0)
+		{
+			printf("error\n");
+			line = NULL;
+		}
 	while ((s_line = split_line(line)) != NULL)
 	{
     	split_words(s_line, env);
