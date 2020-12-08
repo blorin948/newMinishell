@@ -30,13 +30,14 @@ int echo_cmd(t_cmd *cmd)
 	if (ft_strcmp(cmd->split[1], "-n") == 0)
 		return (1);
 	write(1, "\n", 1);
+	return (0);
 }
 
 int cd_cmd(t_cmd *cmd, t_env *env)
 {
 	int i = 0;
 	while (cmd->split[i])
-		cmd->split[i++];
+		i++;
 	if (i == 1)
 	{
 		if (chdir(find_home(env)) != 0)
@@ -55,4 +56,5 @@ int cd_cmd(t_cmd *cmd, t_env *env)
 			printf("%s : No such file or directory\n", cmd->split[1]);
 		}
 	}
+	return (0);
 }

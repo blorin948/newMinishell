@@ -38,8 +38,9 @@ int find_builtin(t_cmd *cmd, t_env *env)
 		cd_cmd(cmd, env);
 	if (ft_strcmp(cmd->split[0], "unset") == 0)
 		unset_cmd(cmd, env);
-	/*if (ft_strcmp(cmd->split[0], "pwd") == 0)
+	if (ft_strcmp(cmd->split[0], "pwd") == 0)
 		pwd_cmd(cmd);
 	if (ft_strcmp(cmd->split[0], "exit") == 0)
-		exit_cmd(cmd);*/
+		exit_cmd(cmd, env);
+	return (1);
 }

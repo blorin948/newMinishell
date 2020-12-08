@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 void free_all(t_env *env)
@@ -840,6 +839,7 @@ int check_in_fd(t_cmd *cmd)
 	}
 	i--;
 	cmd->fd_in = open(get_name(cmd->redi_in[i], '<'), O_RDONLY,S_IRWXU);
+	return (0);
 }
 
 void parse_all(t_env *env)
@@ -937,6 +937,22 @@ int check_hook(char *str)
 	return (0);
 }
 
+void signal_handler(int sig)
+{
+	//printf("slt\n");
+	//test();
+	printf("\n");
+display_prompt();
+}
+
+void signal_quit(int sig)
+{
+	//printf("aller salut\n");
+	//exit(0);
+	printf("\n");
+	display_prompt();
+}
+
 int     main(int ac, char **av, char **envir)
 {
     char *line = NULL;
@@ -951,8 +967,11 @@ int     main(int ac, char **av, char **envir)
 	env->export = create_export(env->envir);
     while (1)
     {
+		signal(SIGINT, signal_handler);
+		signal(SIGQUIT, signal_quit);
 	display_prompt();
-    get_next_line(0, &line);
+    if (get_next_line(0, &line)== 0)
+		exit(0);
 	if (check_hook(line) != 0)
 		{
 			printf("error\n");

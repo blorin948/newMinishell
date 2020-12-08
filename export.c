@@ -160,4 +160,5 @@ int export_cmd(t_cmd *cmd, t_env *env)
 		i++;
 	}
 	i = 0;
+	return (0);
 }

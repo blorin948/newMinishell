@@ -1,6 +1,9 @@
 #include "minishell.h"
 
-
+void test(int sig)
+{
+	printf("\n");
+}
 
 int exec(t_env *env)
 {
@@ -13,7 +16,6 @@ int exec(t_env *env)
 	t_cmd *cmd = env->cmd;
 	while (cmd)
 	{
-		create_path(env, cmd);
 		pipe(p);
 		built = is_builtin(cmd);
 		if (built == 0)
@@ -21,6 +23,7 @@ int exec(t_env *env)
 			if ((pid = fork()) == -1)
 				return (0);
 		}
+		signal(SIGQUIT, test);
 		cpy = dup(1);
 		if (pid == 0 && built == 0)
 		{
@@ -40,6 +43,8 @@ int exec(t_env *env)
 			}
 			close(p[0]);
 			i = 0;
+			execve(cmd->split[0], cmd->split, env->envir);
+			create_path(env, cmd);
 			while (cmd->newpath[i])
 				execve(cmd->newpath[i++], cmd->split, env->envir);
 			dup2(cpy, 1);
@@ -71,4 +76,5 @@ int exec(t_env *env)
 			built = 0;
 		}
 	}
+	return (0);
 }
