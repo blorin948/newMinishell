@@ -17,7 +17,8 @@ SRC =	main.c\
 		fonctions_annexe.c\
 		echo.c\
 		export.c\
-		unset.c
+		unset.c\
+		pwd_exit.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 

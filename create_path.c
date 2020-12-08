@@ -19,6 +19,14 @@ char	*find_path(t_env *env, char *str)
 int create_path(t_env *env, t_cmd *cmd)
 {
 	int i = 0;
+	if (cmd->split[0][0] == '/')
+	{
+		if (!(cmd->newpath = malloc(sizeof(char *) * 2)))
+			return (0);
+		cmd->newpath[0] = ft_strdup(cmd->split[0]);
+		cmd->newpath[1] = 0;
+		return (0);
+	}
 	if (find_path(env, "PATH") == NULL)
 	{
 		printf("rate\n");
@@ -31,4 +39,5 @@ int create_path(t_env *env, t_cmd *cmd)
 		cmd->newpath[i] = ft_strjoin(cmd->newpath[i], cmd->split[0]);
 		i++;
 	}
+	return (0);
 }
