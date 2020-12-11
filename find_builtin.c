@@ -22,8 +22,15 @@ int is_builtin(t_cmd *cmd)
 void env_cmd(t_cmd *cmd, t_env *env)
 {
 	int i = 0;
-	while (env->envir[i])
-		printf("%s\n", env->envir[i++]);
+	t_envir *envir = env->envir;
+	while (envir)
+	{
+		ft_putstr_fd(envir->name, 1);
+		ft_putstr_fd("=", 1);
+		ft_putstr_fd(envir->content, 1);
+		ft_putstr_fd("\n", 1);
+		envir = envir->next;
+	}
 }
 
 int find_builtin(t_cmd *cmd, t_env *env)

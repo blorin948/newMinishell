@@ -13,45 +13,11 @@ void free_all(t_env *env)
 	env->cmd = NULL;
 }
 
-void print(t_cmd *cmd)
-{
-    int i = 0;
-char **tab;
-
-    while (cmd)
-    {
-		printf("test %d = %s\n", i, cmd->line);
-		if (cmd->redi_out)
-		{
-			tab = cmd->redi_out;
-			while (tab[i])
-				printf("|%s|\n", tab[i++]);
-		i = 0;
-		}
-        cmd = cmd->next;
-    }
-	//printf("test %d = %s\n", i, cmd->line);
-	/*if (cmd->redi_in)
-	{
-	char **tab = cmd->redi_in;
-	while (tab[i])
-		printf("|%s|\n", tab[i++]);
-	}*/
-	//free_all(cmd);
-	//free_all(cmd);
-}
-
-
-void display_prompt(void)
-{
-    ft_putstr_fd("prompteur : ", 1);
-}
-
 char *line_cpy(t_cmd *cmd, char *line, int end, int start)
 {
     char *new;
     int i = 0;
-//printf("%d\n", end - start + 1);
+
     if (!(cmd->line = malloc(sizeof(char) * end - start + 1)))
         return (0);
 	if (line[end] == '|')
@@ -62,7 +28,6 @@ char *line_cpy(t_cmd *cmd, char *line, int end, int start)
         	start++;
      	   i++;
     	}
-		//printf("%d  %d   %c\n", start, end, cmd->line[i]);
 	}
 	else if (line[end] == ';')
 	{
@@ -78,7 +43,6 @@ char *line_cpy(t_cmd *cmd, char *line, int end, int start)
 	{
 		while (start < end)
     	{
-			//printf("test 2\n");
         	cmd->line[i] = line[start];
         	start++;
      	   i++;
@@ -122,7 +86,7 @@ void split_words(char *line, t_env *env)
     }
     end = i;
     line_cpy(create_cmd(env), line, end, start);
-//	printf("start = %c end = %c\n", line[start], line[end - 1]);
+	new = env->cmd;
 }
 
 char *remove_pipe2(char *line, int in, int out, int len)
@@ -247,20 +211,17 @@ char   *comp_var(char *var, t_env *env)
   int n = 0;
   int a = 0;
   char *new;
-  while (env->envir[a] && n == 0)
-  {
-      while (env->envir[a][i] && env->envir[a][i] != '=')
-        i++;
-       if (comp_var2(env->envir[a], var) == 1)
-       {
-          new = ft_strdup(env->envir[a] + (i + 1));
-          n++;
-             //  printf("%s\n", new);
+  t_envir *envir = env->envir;
+
+	while (envir && n == 0)
+	{
+		if (ft_strcmp(envir->name, var) == 0)
+		{
+			new = ft_strdup(envir->content);
+			n++;
        }
-    a++;
-    i = 0;
+	envir = envir->next;
   }
-//  printf("yoyo\n");
   if (n == 0)
     new = NULL;
   return (new);
@@ -317,6 +278,37 @@ char *replace_var(char *cmd, char *var, int i, t_env *env)
       return (new);
 }
 
+char *replace_sig(char *line, char *var ,int i)
+{
+	int a = 0;
+	int c = 0;
+	char *new;
+	if (!(new = malloc(sizeof(char )* ft_strlen(line) + ft_strlen(var) - 1)))
+		return (NULL);
+	int tmp = i - 2;
+	i = 0;
+	while (i <= tmp)
+	{
+		new[i] = line[i];
+		i++;
+	}
+	c = 0;
+	while (var[c])
+	{
+		new[i] = var[c];
+		i++;
+		c++;
+	}
+	tmp = tmp + 3;
+	while (line[tmp])
+	{
+		new[i] = line[tmp];
+		i++;
+		tmp++;
+	}
+	new[i] = '\0';
+	return (new);
+}
 
 char *parse_dollars(t_cmd *cmd, t_env *env)
 {
@@ -337,10 +329,16 @@ char *parse_dollars(t_cmd *cmd, t_env *env)
     if (new[i] == '$' && cro == 0)
     {
       i++;
+	  if (new[i] == '?')
+	  {
+		  new = replace_sig(cmd->line, var, i);
+	  }
+	  else if (!(ft_isalnum(new[i]) == 0))
+		{
       var = get_var(cmd->line, i, env);
       new = replace_var(cmd->line, var, i, env);
-     // printf("%s\n", cmd);
-      //i = 0;
+		}
+
     }
     i++;
   }
@@ -403,14 +401,13 @@ int count_len2(char *line, int i)
 				i++;
 			i++;
 		}
-		if (ft_isalnum(line[i]) != 1 && line[i] != '"' && line[i] != '\'')
+		if ((line[i] == '\0' || line[i] == ' ') && line[i] != '"' && line[i] != '\'')
 		{
 			
 			return (i - count);
 		}
 		i++;
 	}
-	//printf("i = %d count = %d  la = %d\n", i, count ,i - count);
 	return (i - count);
 }
 
@@ -423,7 +420,6 @@ void count_len(t_cmd *cmd)
 	int guill = 0;
 	int k = 0;
 	int tmp = 0;
-	//cmd->len = ft_strlen(cmd->line);
 	while (new[i])
 	{
 		if (new[i] == '\'')
@@ -477,7 +473,7 @@ char *fill_tab(char *line, int i, int len, char redir)
 	{
 		i++;
 	}
-	while (line[i])
+	while (line[i] && line[i] != ' ')
 	{
 		while (line[i] == '\'')
 		{
@@ -500,8 +496,8 @@ char *fill_tab(char *line, int i, int len, char redir)
 			}
 			i++;
 		}
-		if (ft_isalnum(line[i]) != 1)
-			break ;
+		//if (ft_isalnum(line[i]) != 1)
+		//	break ;
 		tab[a] = line[i];
 		i++;
 		a++;
@@ -540,14 +536,13 @@ int count_len_redir(char *line, int i)
 				i++;
 			i++;
 		}
-		if (ft_isalnum(line[i]) != 1 && line[i] != '"' && line[i] != '\'')
+		if ((line[i] == '\0' || line[i] == ' ') && line[i] != '"' && line[i] != '\'')
 		{
 			
 			return (i - count - c);
 		}
 		i++;
 	}
-	//printf("i = %d count = %d  la = %d\n", i, count ,i - count);
 	return (i - count - c);
 }
 
@@ -627,7 +622,7 @@ char    *split_rest2(char *str)
             guillemets = 1;
         else if (str[i] == 39)
             guillemets = 0;
-        else if (str[i] == ' ' && (guillemetd == 1 || guillemets == 1) && (tmp[0] = '\a'))
+        if (str[i] == ' ' && (guillemetd == 1 || guillemets == 1) && (tmp[0] = '\a'))
             line2 = ft_strjoin(line2, tmp);
         else if (str[i] != '"' && str[i] != 39 && (tmp[0] = str[i]))
             line2 = ft_strjoin(line2, tmp);
@@ -691,10 +686,11 @@ int split_rest(t_cmd *cmd)
 		i++;
 	}
 	new[a] = '\0';
-	//cmd->line = new;
 	new = split_rest2(new);
 	cmd->line = new;
+	cmd->split = NULL;
 	cmd->split = ft_split(new, ' ');
+	i = 0;
 	cmd->split = remake(cmd->split);
 	return (1);
 }
@@ -803,10 +799,6 @@ void add_id(t_env *env)
 void check_in_out(t_cmd *cmd, t_env *env)
 {
 	int i = 0;
-	//while (cmd->split[i])
-	//		printf("out = %d in =  %d rest = |%s|\n", cmd->out, cmd->in, cmd->split[i++]);
-	//printf("id = %d  nbr = %d\n", cmd->id, env->nbr);
-		i = 0;
 	if (cmd->id == 1 && cmd->id != env->nbr)
 	{
 		cmd->out = 2;
@@ -852,16 +844,11 @@ void parse_all(t_env *env)
     {
 		remove_pipe_virgul(cmd);
 		cmd->line = parse_dollars(cmd, env);
+	
 		parse_hook_split(cmd);
 		check_in_out(cmd, env);
 		create_fd(cmd);
 		check_in_fd(cmd);
-	/*	while (cmd->split[i])
-		{
-		
-				printf("%s\n", cmd->split[i]);
-			i++;
-		}*/
 	cmd = cmd->next;
 		i = 0;
     }
@@ -910,10 +897,9 @@ int check_hook(char *str)
 	int i = 0;
 	while (str[i])
 	{
-		while (str[i] == '\'')
+		if (str[i] == '\'')
 		{
 			i++;
-		
 			while (str[i] && str[i] != '\'')
 			{
 				
@@ -923,7 +909,7 @@ int check_hook(char *str)
 				return (1);
 			i++;
 		}
-		while (str[i] == '"')
+		if (str[i] == '"')
 		{
 			i++;
 			while (str[i] && str[i] != '"')
@@ -932,25 +918,31 @@ int check_hook(char *str)
 				return (1);
 			i++;
 		}
-		i++;
+		if (str[i] != '"' && str[i] != '\'')
+			i++;
 	}
 	return (0);
 }
 
-void signal_handler(int sig)
+
+void display_prompt(void)
 {
-	//printf("slt\n");
-	//test();
-	printf("\n");
-display_prompt();
+    ft_putstr_fd("prompteur : ", 1);
 }
 
-void signal_quit(int sig)
+void signal_handler(int sig)
 {
-	//printf("aller salut\n");
-	//exit(0);
-	printf("\n");
-	display_prompt();
+	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 1);
+		if (g_sig == 0)
+			display_prompt();
+	}
+	if (sig == SIGQUIT)
+	{
+		ft_putstr_fd("\n", 1);
+		display_prompt();
+	}
 }
 
 int     main(int ac, char **av, char **envir)
@@ -962,28 +954,30 @@ int     main(int ac, char **av, char **envir)
     if (!(env = malloc(sizeof(t_env))))
         return (0);
 	env->cmd = NULL;
-	env->envir = envir;
+	env->envir = NULL;
+	env->export = NULL;
+	env->env_tab = envir;
 	i = 0;
-	env->export = create_export(env->envir);
+	g_sig = 0;
+	create_envir_export(env, envir);
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, signal_handler);
     while (1)
     {
-		signal(SIGINT, signal_handler);
-		signal(SIGQUIT, signal_quit);
-	display_prompt();
-    if (get_next_line(0, &line)== 0)
-		exit(0);
-	if (check_hook(line) != 0)
+		display_prompt();
+    	if (get_next_line(0, &line)== 0)
+			exit(0);
+		if (check_hook(line) != 0)
 		{
 			printf("error\n");
 			line = NULL;
 		}
-	while ((s_line = split_line(line)) != NULL)
-	{
-    	split_words(s_line, env);
-    	parse_all(env);
-		exec(env);
-		//print(env->cmd);
-		free_all(env);
+		while ((s_line = split_line(line)) != NULL)
+		{
+    		split_words(s_line, env);
+    		parse_all(env);
+			exec(env);
+			free_all(env);
+		}
 	}
-    }
 }

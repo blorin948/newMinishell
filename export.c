@@ -25,7 +25,7 @@ int is_valid(char *str)
 	}
 	return (0);
 }
-
+/*
 char *fill_export(char *str1, char *str2)
 {
 	char *new;
@@ -39,8 +39,6 @@ char *fill_export(char *str1, char *str2)
 	}
 	int a = 0;
 	int e = 0;
-
-
 	while (str2[a])
 	{
 		new[i] = str2[a];
@@ -58,7 +56,7 @@ char *fill_export(char *str1, char *str2)
 	new[i] = '\0';
 	return (new);
 }
-
+/*
 char **create_export(char **tab)
 {
 	char **newtab;
@@ -76,7 +74,7 @@ char **create_export(char **tab)
 	}
 	newtab[i] = 0;
 	return (newtab);
-}
+}*/
 
 char **add_line(char *str, char **tab)
 {
@@ -90,7 +88,7 @@ char **add_line(char *str, char **tab)
 	int a = 0;
 	while (tab[a])
 	{
-		if (!(newtab[a] = malloc(sizeof(char) * ft_strlen(tab[a]))))
+		if (!(newtab[a] = malloc(sizeof(char) * ft_strlen(tab[a]) + 1)))
 			return (NULL);
 		while (tab[a][i])
 		{
@@ -107,14 +105,14 @@ char **add_line(char *str, char **tab)
 	return (newtab);
 }
 
-int is_already(char **tab, char *str)
+int is_already(t_export *export, char *str)
 {
 	int i = 0;
-	while (tab[i])
+	while (export)
 	{
-		if (ft_strcmp(tab[i], str) == 0)
+		if (ft_strcmp(export->str, str) == 0)
 			return (1);
-		i++;
+		export = export->next;
 	}
 	return (0);
 }
@@ -122,22 +120,26 @@ int is_already(char **tab, char *str)
 int export_cmd(t_cmd *cmd, t_env *env)
 {
 	int i = 1;
+	t_export *export = env->export;
 	if (!(cmd->split[1]))
 	{
-		while (env->export[i])
-		printf("%s\n", env->export[i++]);
+		while (export)
+		{
+			ft_putstr_fd(export->str, 1);
+			ft_putstr_fd("\n", 1);
+			export = export->next;
+		}
 	}
 	i = 1;
 	while (cmd->split[i])
 	{
 		if (is_char(cmd->split[i], '=') == 0)//pas d'egale
 		{
-			if (is_valid(cmd->split[i]) == 0)//
+			if (is_valid(cmd->split[i]) == 0)
 			{
-				if (is_already(env->envir, cmd->split[i]) == 0)
+				if (is_already(export, ft_strjoin("declare -x ", cmd->split[i])) == 0)
 				{
-					if (find_path(env, cmd->split[i]) == NULL)
-						env->export = add_line(ft_strjoin("declare -x ", cmd->split[i]), env->export);
+					fill_export(create_export(env), ft_strjoin("declare -x ", cmd->split[i]));
 				}
 			}
 			else
@@ -147,10 +149,10 @@ int export_cmd(t_cmd *cmd, t_env *env)
 		{
 			if (is_valid(cmd->split[i]) == 0)
 			{
-				if (is_already(env->export, ft_strjoin("declare -x ", cmd->split[i])) == 0)
+				if (is_already(export, ft_strjoin("declare -x ", cmd->split[i])) == 0)
 				{
-					env->export = add_line(ft_strjoin("declare -x ", cmd->split[i]), env->export);
-					env->envir = add_line(cmd->split[i], env->envir);
+					fill_envir(create_envir(env), cmd->split[i]);
+					fill_export(create_export(env), ft_strjoin("declare -x ", cmd->split[i]));
 				}
 			}
 			else

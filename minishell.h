@@ -11,17 +11,37 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
+#include <math.h>
+#include <limits.h>
 # define TRUE 1
 #define FALSE 0
+
 
 int		get_next_line(int fd, char **line);
 typedef struct s_env
 {
     struct s_cmd *cmd;
-	char **envir;
+	struct s_envir *envir;
 	int nbr;
-	char **export;
+	char **env_tab;
+	struct s_export *export;
 } t_env;
+
+typedef struct s_envir
+{
+	struct s_envir *next;
+	struct s_envir *prev;
+	char *str;
+	char *name;
+	char *content;
+}t_envir;
+
+typedef struct s_export
+{
+	struct s_export *next;
+	struct s_export *prev;
+	char *str;
+}t_export;
 
 typedef struct s_cmd
 {
@@ -45,8 +65,16 @@ typedef struct s_cmd
     
 }t_cmd;
 
+
+int g_sig;
+int ok;
+void create_envir_export(t_env *env, char **tab);
+t_envir *create_envir(t_env *env);
+void display_prompt(void);
+void fill_export(t_export *export, char *str);
+void fill_envir(t_envir *envir, char *str);
+t_envir *init_envir(void);
 void ft_putstr(char *str);
-char **create_export(char **tab);
 char	*find_path(t_env *env, char *str);
 int cd_cmd(t_cmd *cmd, t_env *env);
 int is_builtin(t_cmd *cmd);
@@ -56,8 +84,12 @@ int find_builtin(t_cmd *cmd, t_env *env);
 int echo_cmd(t_cmd *cmd);
 int ft_strcmp(char *str1, char *str2);
 int create_path(t_env *env, t_cmd *cmd);
+t_export *create_export(t_env *env);
+t_export *init_export(void);
 t_cmd *init_cmd(void);
 int exec(t_env *env);
+int pwd_cmd(t_cmd *cmd);
+int exit_cmd(t_cmd *cmd, t_env *env);
 t_cmd *create_cmd(t_env *env);
 
 #endif

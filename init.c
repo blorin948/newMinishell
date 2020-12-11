@@ -19,6 +19,28 @@ t_cmd *init_cmd(void)
 	new->pipefd = NULL;
 	new->fd_in = 0;
 	new->newpath = NULL;
+	new->redi_in = NULL;
     return (new);
 }
 
+t_envir *init_envir(void)
+{
+	t_envir *new;
+	if (!(new = malloc(sizeof(t_envir))))
+		return (NULL);
+	new->str = NULL;
+	new->next = NULL;
+	new->name = NULL;
+	new->content = NULL;
+	return (new);
+}
+
+t_export *init_export(void)
+{
+	t_export *new;
+	if (!(new = malloc(sizeof(t_export))))
+		return (NULL);
+	new->str = NULL;
+	new->next = NULL;
+	return (new);
+}

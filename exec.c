@@ -1,10 +1,5 @@
 #include "minishell.h"
 
-void test(int sig)
-{
-	printf("\n");
-}
-
 int exec(t_env *env)
 {
 	int i = 0;
@@ -20,10 +15,9 @@ int exec(t_env *env)
 		built = is_builtin(cmd);
 		if (built == 0)
 		{
-			if ((pid = fork()) == -1)
+			if ((g_sig = 1) && (pid = fork()) == -1)
 				return (0);
 		}
-		signal(SIGQUIT, test);
 		cpy = dup(1);
 		if (pid == 0 && built == 0)
 		{
@@ -41,15 +35,15 @@ int exec(t_env *env)
 			{
 				dup2(p[1], 1);
 			}
+			ok = 1;
 			close(p[0]);
 			i = 0;
-			execve(cmd->split[0], cmd->split, env->envir);
+			execve(cmd->split[0], cmd->split, env->env_tab);
 			create_path(env, cmd);
 			while (cmd->newpath[i])
-				execve(cmd->newpath[i++], cmd->split, env->envir);
+				execve(cmd->newpath[i++], cmd->split, env->env_tab);
 			dup2(cpy, 1);
 			printf("command not found : %s\n", cmd->split[0]);
-			
 			exit(0);
 		}
 		else
@@ -75,6 +69,7 @@ int exec(t_env *env)
 			cmd = cmd->next;
 			built = 0;
 		}
+		g_sig = 0;
 	}
 	return (0);
 }

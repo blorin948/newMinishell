@@ -18,7 +18,8 @@ SRC =	main.c\
 		echo.c\
 		export.c\
 		unset.c\
-		pwd_exit.c
+		pwd_exit.c\
+		create_envir_export.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 

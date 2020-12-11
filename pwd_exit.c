@@ -5,6 +5,7 @@ int pwd_cmd(t_cmd *cmd)
 	char str[PATH_MAX];
 	getcwd(str, PATH_MAX);
 	ft_putstr_fd(str, 1);
+	ft_putstr_fd("\n", 1);
 }
 
 int exit_cmd(t_cmd *cmd, t_env *env)

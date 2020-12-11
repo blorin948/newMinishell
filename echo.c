@@ -4,14 +4,12 @@ char	*find_home(t_env *env)
 {
 	int i = 0;
 	int a = 0;
-	while (env->envir[a])
+	t_envir *envir = env->envir;
+	while (envir)
 	{
-		while (env->envir[a][i] != '=')
-			i++;
-		if (ft_strncmp(env->envir[a], "HOME", i) == 0)
-			return (ft_substr(env->envir[a], 5, ft_strlen(env->envir[a])));
-		a++;
-		i = 0;
+		if (ft_strcmp(envir->name, "HOME") == 0)
+			return (envir->content);
+		envir = envir->next;
 	}
 	return (NULL);
 }
