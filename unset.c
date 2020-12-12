@@ -50,26 +50,63 @@ char **remove_env(char **tab, int tmp)
 	return (new);	
 }
 
-void del_envir(t_envir *envir, t_env *env)
+void del_envir(t_env *env, char *str)
 {
-	t_envir *tmp;
+	t_envir *tmp = env->envir;
+	t_envir *prev;
 
-	tmp = envir->prev;
-	tmp->next = envir->next;
-	free(envir->name);
-	free(envir->content);
-	free(envir->str);
-	free(envir);
+	if (ft_strcmp(tmp->name, str) == 0)
+	{
+		env->envir = tmp->next;
+		//free(tmp->name);
+		//free(tmp->content);
+		//free(tmp->str);
+		free(tmp);
+		return ;
+	}
+	prev = tmp;
+	tmp = tmp->next;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->name, str) == 0)
+		{
+			prev->next = tmp->next;
+			free(tmp->name);
+			free(tmp->content);
+			free(tmp);
+			return ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
 }
 
-void del_export(t_export *export, t_env *env)
+void del_export(t_env *env, char *str)
 {
-	t_export *tmp;
+	t_export *tmp = env->export;
+	t_export *prev;
 
-	tmp = export->prev;
-	tmp->next = export->next;
-	free(export->str);
-	free(export);
+	if (ft_strcmp(tmp->str, str) == 0)
+	{
+		env->export = tmp->next;
+		free(tmp->str);
+		free(tmp);
+		return ;
+	}
+	prev = tmp;
+	tmp = tmp->next;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->str, str) == 0)
+		{
+			prev->next = tmp->next;
+			free(tmp->str);
+			free(tmp);
+			return ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
 }
 
 int unset_cmd(t_cmd *cmd, t_env *env)
@@ -82,18 +119,8 @@ int unset_cmd(t_cmd *cmd, t_env *env)
 	t_export *export = env->export;
 	while (cmd->split[i])
 	{
-		while (envir)
-		{
-			if (ft_strcmp(envir->name, cmd->split[i]) == 0)
-				del_envir(envir, env);
-			envir = envir->next;
-		}
-		while (export)
-		{
-			if (ft_strcmp(envir->name, cmd->split[i]) == 0)
-				del_export(export, env);
-			export = export->next;
-		}
+		del_envir(env, cmd->split[i]);
+		del_export(env, ft_strjoin("declare -x ", cmd->split[i]));
 		envir = env->envir;
 		export = env->export;
 		i++;

@@ -68,6 +68,7 @@ typedef struct s_cmd
 
 int g_sig;
 int ok;
+int g_ret;
 void create_envir_export(t_env *env, char **tab);
 t_envir *create_envir(t_env *env);
 void display_prompt(void);
