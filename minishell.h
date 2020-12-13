@@ -24,8 +24,18 @@ typedef struct s_env
 	struct s_envir *envir;
 	int nbr;
 	char **env_tab;
+	int ex;
 	struct s_export *export;
 } t_env;
+
+typedef struct s_norm_fucker
+{
+	int guillemets;
+	int guillemetd;
+	char *line2;
+	char tmp[2];
+	int i;
+}	t_norm_fucker;
 
 typedef struct s_envir
 {
@@ -79,6 +89,8 @@ void ft_putstr(char *str);
 char	*find_path(t_env *env, char *str);
 int cd_cmd(t_cmd *cmd, t_env *env);
 int is_builtin(t_cmd *cmd);
+int remove_pipe_virgul(t_cmd *cmd);
+char *parse_dollars(t_cmd *cmd, t_env *env);
 int unset_cmd(t_cmd *cmd, t_env *env);
 int export_cmd(t_cmd *cmd, t_env *env);
 int find_builtin(t_cmd *cmd, t_env *env);
@@ -90,7 +102,14 @@ t_export *init_export(void);
 t_cmd *init_cmd(void);
 int exec(t_env *env);
 int pwd_cmd(t_cmd *cmd);
-int exit_cmd(t_cmd *cmd, t_env *env);
+void free_all(t_env *env);
+void split_words(char *line, t_env *env);
+int pass_hook(char *str, int i);
+char **create_tab_redir(t_cmd *cmd, int len, char redir);
+int count_len2(char *line, int i);
+void count_len(t_cmd *cmd, int i);
+int split_rest(t_cmd *cmd);
+int exit_cmd(t_env *env);
 t_cmd *create_cmd(t_env *env);
 
 #endif

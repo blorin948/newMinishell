@@ -2,6 +2,8 @@
 
 int exec(t_env *env)
 {
+	if (env->ex > 0)
+		return (0);
 	int i = 0;
 	int built = 0;
 	int fd_in = 0;;

@@ -8,7 +8,7 @@ int pwd_cmd(t_cmd *cmd)
 	ft_putstr_fd("\n", 1);
 }
 
-int exit_cmd(t_cmd *cmd, t_env *env)
+int exit_cmd(t_env *env)
 {
 	exit(0);
 }

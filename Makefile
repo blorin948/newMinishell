@@ -19,7 +19,13 @@ SRC =	main.c\
 		export.c\
 		unset.c\
 		pwd_exit.c\
-		create_envir_export.c
+		create_envir_export.c\
+		lst_create.c\
+		exit_free.c\
+		remove_pipe_virgul.c\
+		parse_dollars.c\
+		create_tab_redir.c\
+		split_rest.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 

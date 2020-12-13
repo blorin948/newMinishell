@@ -48,6 +48,6 @@ int find_builtin(t_cmd *cmd, t_env *env)
 	if (ft_strcmp(cmd->split[0], "pwd") == 0)
 		pwd_cmd(cmd);
 	if (ft_strcmp(cmd->split[0], "exit") == 0)
-		exit_cmd(cmd, env);
+		exit_cmd(env);
 	return (1);
 }
