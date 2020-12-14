@@ -25,7 +25,11 @@ SRC =	main.c\
 		remove_pipe_virgul.c\
 		parse_dollars.c\
 		create_tab_redir.c\
-		split_rest.c
+		split_rest.c\
+		create_fd.c\
+		parse_line.c\
+		check_split_lines.c\
+		start_parse_replace.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 

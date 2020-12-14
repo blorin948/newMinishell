@@ -25,56 +25,6 @@ int is_valid(char *str)
 	}
 	return (0);
 }
-/*
-char *fill_export(char *str1, char *str2)
-{
-	char *new;
-	if (!(new = malloc(sizeof(char) * ft_strlen(str2) + 14)))
-		return (NULL);
-	int i = 0;
-	while (str1[i])
-	{
-		new[i] = str1[i];
-		i++;
-	}
-	int a = 0;
-	int e = 0;
-	while (str2[a])
-	{
-		new[i] = str2[a];
-		if (str2[a] == '=' && e == 0)
-		{
-			i++;
-			new[i] = '"';
-			e++;
-		}
-		i++;
-		a++;
-	}
-	new[i] = '"';
-	i++;
-	new[i] = '\0';
-	return (new);
-}
-/*
-char **create_export(char **tab)
-{
-	char **newtab;
-	int i  =0;
-	int a = 0;
-	while (tab[i])
-		i++;
-	if (!(newtab = malloc(sizeof(char *) * i + 1)))
-		return (NULL);
-	i = 0;
-	while (tab[i])
-	{
-		newtab[i] = fill_export("declare -x ", tab[i]);
-		i++;
-	}
-	newtab[i] = 0;
-	return (newtab);
-}*/
 
 char **add_line(char *str, char **tab)
 {

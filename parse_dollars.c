@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 19:14:52 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/13 19:56:14 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/14 18:29:44 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char	*get_var(char *cmd, int i, t_env *env)
 char	*parse_dollars2(char *str, int *i, char *new, t_env *env)
 {
 	char tmp[2];
+	int a = 0;
 
 	tmp[1] = '\0';
 	*i = *i + 1;
@@ -101,6 +102,7 @@ char	*parse_dollars2(char *str, int *i, char *new, t_env *env)
 		tmp[0] = '$';
 		new = ft_strjoin(new, tmp);
 	}
+	new = replace_dollars(new);
 	return (new);
 }
 
@@ -127,8 +129,10 @@ char	*parse_dollars(t_cmd *cmd, t_env *env)
 		if (cmd->line[i] == '$' && cro == 0)
 			new = parse_dollars2(cmd->line, &i, new, env);
 		tmp[0] = cmd->line[i];
-		new = ft_strjoin(new, tmp);
-		i++;
+		if (cmd->line[i] != '$')
+			new = ft_strjoin(new, tmp);
+		if (cmd->line[i] != '$')
+			i++;
 	}
 	return (new);
 }

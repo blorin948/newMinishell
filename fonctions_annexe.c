@@ -75,3 +75,19 @@ void	count_len(t_cmd *cmd, int i)
 	}
 	cmd->len = i - tmp;
 }
+
+char *replace_dollars(char *new)
+{
+	int a;
+
+	a = 0;
+	while (new[a])
+	{
+		if (new[a] == '"')
+			new[a] = '\b';
+		else if (new[a] == '\'')
+			new[a] = '\e';
+		a++;
+	}
+	return (new);
+}
