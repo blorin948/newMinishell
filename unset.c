@@ -1,67 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/15 17:32:46 by blorin            #+#    #+#             */
+/*   Updated: 2020/12/15 17:45:31 by blorin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int unset2(char *env, char *var)
+void	free_envir(t_envir *tmp)
 {
-	int i = 0;
-	int a = 0;
-	while (env[i] && env[i] != '=')
-		i++;
-	if (i != ft_strlen(var))
-		return (1);
-	i = 0;
-	while (env[i] && env[i] != '=')
-	{
-		if (env[i] != var[i])
-			return (1);
-		i++;
-	}
-	return (0);
+	free(tmp->name);
+	free(tmp->content);
+	free(tmp);
 }
 
-char **remove_env(char **tab, int tmp)
+void	del_envir(t_env *env, char *str)
 {
-	char **new;
-	int a = 0;
-	int c = 0;
-	int i = 0;
-	while (tab[i])
-		i++;
-	if (!(new = malloc(sizeof(char *) * i)))
-		return (NULL);
-	i = 0;
-	while (tab[a])
-	{
-		if (a != tmp)
-		{
-			if (!(new[c] = malloc(sizeof(char) * ft_strlen(tab[a]) + 1)))
-				return (NULL);
-			while (tab[a][i])
-			{
-				new[c][i] = tab[a][i];
-				i++;
-			}
-			new[c][i] = '\0';
-			c++;
-			i = 0;
-		}
-		a++;
-	}
-	new[c] = 0;
-	return (new);	
-}
-
-void del_envir(t_env *env, char *str)
-{
-	t_envir *tmp = env->envir;
+	t_envir *tmp;
 	t_envir *prev;
 
+	tmp = env->envir;
 	if (ft_strcmp(tmp->name, str) == 0)
 	{
 		env->envir = tmp->next;
-		//free(tmp->name);
-		//free(tmp->content);
-		//free(tmp->str);
-		free(tmp);
+		free_envir(tmp);
 		return ;
 	}
 	prev = tmp;
@@ -71,9 +38,7 @@ void del_envir(t_env *env, char *str)
 		if (ft_strcmp(tmp->name, str) == 0)
 		{
 			prev->next = tmp->next;
-			free(tmp->name);
-			free(tmp->content);
-			free(tmp);
+			free_envir(tmp);
 			return ;
 		}
 		prev = tmp;
@@ -81,27 +46,34 @@ void del_envir(t_env *env, char *str)
 	}
 }
 
-void del_export(t_env *env, char *str)
+void	free_export(t_export *tmp)
 {
-	t_export *tmp = env->export;
+	free(tmp->str);
+	free(tmp->name);
+	free(tmp->content);
+	free(tmp);
+}
+
+void	del_export(t_env *env, char *str)
+{
+	t_export *tmp;
 	t_export *prev;
 
-	if (ft_strcmp(tmp->str, str) == 0)
+	tmp = env->export;
+	if (ft_strcmp(tmp->name, str) == 0)
 	{
 		env->export = tmp->next;
-		free(tmp->str);
-		free(tmp);
+		free_export(tmp);
 		return ;
 	}
 	prev = tmp;
 	tmp = tmp->next;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->str, str) == 0)
+		if (ft_strcmp(tmp->name, str) == 0)
 		{
 			prev->next = tmp->next;
-			free(tmp->str);
-			free(tmp);
+			free_export(tmp);
 			return ;
 		}
 		prev = tmp;
@@ -109,18 +81,19 @@ void del_export(t_env *env, char *str)
 	}
 }
 
-int unset_cmd(t_cmd *cmd, t_env *env)
+int		unset_cmd(t_cmd *cmd, t_env *env)
 {
-	int replace = 0;
-	int i = 1;
-	int c = 0;
-	int a = 0;
-	t_envir *envir = env->envir;
-	t_export *export = env->export;
+	int			i;
+	t_envir		*envir;
+	t_export	*export;
+
+	i = 0;
+	envir = env->envir;
+	export = env->export;
 	while (cmd->split[i])
 	{
 		del_envir(env, cmd->split[i]);
-		del_export(env, ft_strjoin("declare -x ", cmd->split[i]));
+		del_export(env, cmd->split[i]);
 		envir = env->envir;
 		export = env->export;
 		i++;

@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:08:34 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 19:07:55 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/15 16:34:11 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,23 +65,22 @@ char	*get_name(char *str, char c)
 	return (new);
 }
 
-int		create_fd2(t_cmd *cmd)
+int		create_fd2(t_cmd *cmd, int a)
 {
-	int a;
-
-	a = 0;
 	while (a < cmd->out_len - 1)
 	{
 		if (is_double(cmd->redi_out[a]) == 0)
 		{
-			if ((open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT | O_TRUNC,
-			S_IRWXU) == -1))
+			if ((open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT |
+			O_TRUNC, S_IRWXU) == -1))
 				return (0);
 		}
 		else
-			if (open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT | O_APPEND,
-			S_IRWXU) == -1)
+		{
+			if (open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT |
+			O_APPEND, S_IRWXU) == -1)
 				return (0);
+		}
 		a++;
 	}
 	if (is_double(cmd->redi_out[a]) == 0)
@@ -110,7 +109,7 @@ int		create_fd(t_cmd *cmd, t_env *env)
 		env->ex = 1;
 		return (0);
 	}
-	if (create_fd2(cmd) == 0)
+	if (create_fd2(cmd, a) == 0)
 	{
 		ft_putstr_fd("Error with FD opening\n", 1);
 		env->ex++;

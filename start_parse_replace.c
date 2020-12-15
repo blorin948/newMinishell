@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:46:49 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 19:11:44 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/14 20:38:25 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ void	parse_all(t_env *env)
 		replace(cmd);
 		check_in_out(cmd, env);
 		create_fd(cmd, env);
+		i = 0;
+//		while (cmd->split[i])
+//			printf("LA = %s\n", cmd->split[i++]);
 		if (check_in_fd(cmd) == 1)
 			env->ex++;
 		cmd = cmd->next;

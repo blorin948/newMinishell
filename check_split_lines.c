@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:34:24 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 18:17:26 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/14 20:30:52 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		check_hook(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' && (i++))
+		if (str[i] == '\'' && (i += 1))
 		{
 			while (str[i] && str[i] != '\'')
 				i++;
@@ -51,7 +51,7 @@ int		check_hook(char *str)
 				return (1);
 			i++;
 		}
-		if (str[i] == '"' && (i++))
+		if (str[i] == '"' && (i += 1))
 		{
 			while (str[i] && str[i] != '"')
 				i++;

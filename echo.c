@@ -1,10 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/15 16:28:03 by blorin            #+#    #+#             */
+/*   Updated: 2020/12/15 16:31:22 by blorin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*find_home(t_env *env)
 {
-	int i = 0;
-	int a = 0;
-	t_envir *envir = env->envir;
+	int		i;
+	int		a;
+	t_envir	*envir;
+
+	i = 0;
+	a = 0;
+	envir = env->envir;
 	while (envir)
 	{
 		if (ft_strcmp(envir->name, "HOME") == 0)
@@ -14,16 +30,18 @@ char	*find_home(t_env *env)
 	return (NULL);
 }
 
-int echo_cmd(t_cmd *cmd)
+int		echo_cmd(t_cmd *cmd)
 {
-	int i = 1;
+	int i;
+
+	i = 1;
 	if (ft_strcmp(cmd->split[1], "-n") == 0)
 		i = 2;
 	while (cmd->split[i])
 	{
-		ft_putstr(cmd->split[i++]);
+		ft_putstr_fd(cmd->split[i++], 1);
 		if (cmd->split[i])
-		ft_putstr(" ");
+			ft_putstr_fd(" ", 1);
 	}
 	if (ft_strcmp(cmd->split[1], "-n") == 0)
 		return (1);
@@ -31,27 +49,26 @@ int echo_cmd(t_cmd *cmd)
 	return (0);
 }
 
-int cd_cmd(t_cmd *cmd, t_env *env)
+int		cd_cmd(t_cmd *cmd, t_env *env)
 {
-	int i = 0;
+	int i;
+
+	i = 0;
 	while (cmd->split[i])
 		i++;
 	if (i == 1)
 	{
 		if (chdir(find_home(env)) != 0)
-		{
-			ft_putstr("home missing\n");
-		}
+			ft_putstr_fd("home missing\n", 1);
 	}
 	if (i > 2)
-	{
-		ft_putstr("to much arguments\n");
-	}
+		ft_putstr_fd("to much arguments\n", 1);
 	if (i == 2)
 	{
 		if (chdir(cmd->split[1]) != 0)
 		{
-			printf("%s : No such file or directory\n", cmd->split[1]);
+			ft_putstr_fd(cmd->split[1], 1);
+			ft_putstr_fd(" : No such file or directory\n", 1);
 		}
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 19:14:52 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 18:29:44 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/15 16:23:22 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,11 @@ char	*parse_dollars2(char *str, int *i, char *new, t_env *env)
 	}
 	else if (ft_isdigit(str[*i]) == 1)
 		*i = *i + 1;
-	else
+	else if (str[*i] != '\'' && str[*i] != '"')
 	{
 		tmp[0] = '$';
 		new = ft_strjoin(new, tmp);
 	}
-	new = replace_dollars(new);
 	return (new);
 }
 
@@ -129,9 +128,9 @@ char	*parse_dollars(t_cmd *cmd, t_env *env)
 		if (cmd->line[i] == '$' && cro == 0)
 			new = parse_dollars2(cmd->line, &i, new, env);
 		tmp[0] = cmd->line[i];
-		if (cmd->line[i] != '$')
+		if (cmd->line[i] != '$' || cro == 1)
 			new = ft_strjoin(new, tmp);
-		if (cmd->line[i] != '$')
+		if (cmd->line[i] != '$' || cro == 1)
 			i++;
 	}
 	return (new);

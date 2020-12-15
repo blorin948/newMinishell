@@ -50,8 +50,20 @@ typedef struct s_export
 {
 	struct s_export *next;
 	struct s_export *prev;
+	char *name;
+	char *content;
 	char *str;
 }t_export;
+
+typedef struct s_exec
+{
+	int i;
+	int built;
+	int fd_in;
+	int pid;
+	int cpy;
+	int p[2];
+}	t_exec;
 
 typedef struct s_cmd
 {
@@ -79,12 +91,18 @@ typedef struct s_cmd
 int g_sig;
 int ok;
 int g_ret;
+int is_already(t_export *export, char *str);
+int is_already_envir(t_envir *envir, char *str);
 int create_fd(t_cmd *cmd, t_env *env);
 void add_id(t_env *env);
 void check_in_out(t_cmd *cmd, t_env *env);
 void parse_hook_split(t_cmd *cmd);
 int check_hook(char *str);
 int check_in_fd(t_cmd *cmd);
+char *find_name(char *str);
+char *find_content(char *str);
+char *fill_export2(char *str, int i);
+int is_char(char *str, char c);
 char *split_line(char *str);
 char *get_name(char *str, char c);
 void create_envir_export(t_env *env, char **tab);

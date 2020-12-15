@@ -3,6 +3,8 @@ NAME =	minishell
 
 LIBFT =	./libft/libft.a
 
+PRINTF = ./ft_printf/libftprintf.a
+
 FLAGS = gcc
 
 HEADERS = minishell.h
@@ -29,7 +31,8 @@ SRC =	main.c\
 		create_fd.c\
 		parse_line.c\
 		check_split_lines.c\
-		start_parse_replace.c
+		start_parse_replace.c\
+		export2.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 
@@ -37,13 +40,17 @@ all: $(NAME)
 
 $(OBJ): ${HEADERS}
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(LIBFT) $(PRINTF) $(OBJ)
 	@echo "\n==> Making Minishell"
-	$(FLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	$(FLAGS) $(OBJ) $(LIBFT) $(PRINTF) -o $(NAME)
 
 $(LIBFT):
 	@echo "\n==> Making LIBFT"
 	make -C ./libft bonus
+
+$(PRINTF):
+	@echo "\n==> Making printf"
+	make -C ./ft_printf
 
 obj/%.o: %.c
 	mkdir -p obj

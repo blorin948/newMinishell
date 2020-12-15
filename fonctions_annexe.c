@@ -1,15 +1,5 @@
 #include "minishell.h"
 
-void ft_putstr(char *str)
-{
-	int i = 0;
-	while (str[i])
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-}
-
 int ft_strcmp(char *str1, char *str2)
 {
 	int i = 0;
@@ -58,13 +48,13 @@ void	count_len(t_cmd *cmd, int i)
 	while (cmd->line[i])
 	{
 		i = pass_hook(cmd->line, i);
-		if (cmd->line[i] == '>' && (cmd->out_len++))
+		if (cmd->line[i] == '>' && (cmd->out_len += 1))
 		{
 			k = count_len2(cmd->line, i);
 			tmp = tmp + k;
 			i = i + k - 1;
 		}
-		else if (cmd->line[i] == '<' && (cmd->in_len++))
+		else if (cmd->line[i] == '<' && (cmd->in_len += 1))
 		{
 			k = count_len2(cmd->line, i);
 			tmp = tmp + k;
