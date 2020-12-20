@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/15 18:14:03 by blorin            #+#    #+#             */
+/*   Updated: 2020/12/15 18:14:39 by blorin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int is_char(char *str, char c)
+int		is_char(char *str, char c)
 {
 	int i;
 
@@ -16,9 +28,9 @@ int is_char(char *str, char c)
 
 char	*fill_export2(char *str, int i)
 {
-	char *new;
-	int a;
-	int c;
+	char	*new;
+	int		a;
+	int		c;
 
 	a = 0;
 	c = 0;
@@ -42,9 +54,11 @@ char	*fill_export2(char *str, int i)
 	return (new);
 }
 
-int is_already(t_export *export, char *str)
+int		is_already(t_export *export, char *str)
 {
-	int i = 0;
+	int i;
+
+	i = 0;
 	while (export)
 	{
 		if (ft_strcmp(export->name, str) == 0)
@@ -54,9 +68,11 @@ int is_already(t_export *export, char *str)
 	return (0);
 }
 
-int is_already_envir(t_envir *envir, char *str)
+int		is_already_envir(t_envir *envir, char *str)
 {
-	int i = 0;
+	int i;
+
+	i = 0;
 	while (envir)
 	{
 		if (ft_strcmp(envir->name, str) == 0)

@@ -40,9 +40,9 @@ all: $(NAME)
 
 $(OBJ): ${HEADERS}
 
-$(NAME): $(LIBFT) $(PRINTF) $(OBJ)
+$(NAME): $(PRINTF) $(LIBFT) $(OBJ)
 	@echo "\n==> Making Minishell"
-	$(FLAGS) $(OBJ) $(LIBFT) $(PRINTF) -o $(NAME)
+	$(FLAGS) $(OBJ) $(PRINTF) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
 	@echo "\n==> Making LIBFT"

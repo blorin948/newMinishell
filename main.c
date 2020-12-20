@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:17:36 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 19:18:07 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:43:31 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,18 @@ void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
+		g_ret = 130;
 		ft_putstr_fd("\n", 1);
 		if (g_sig == 0)
 			display_prompt();
 	}
 	if (sig == SIGQUIT)
 	{
-		ft_putstr_fd("\n", 1);
-		display_prompt();
+		if (g_sig == 1)
+		{
+			g_ret = 131;
+			ft_printf("Quit: 3\n");
+		}
 	}
 }
 
@@ -45,6 +49,7 @@ int		start_loop(t_env *env, char *s_line, char *line)
 		if (check_hook(line) != 0)
 		{
 			ft_putstr_fd("No multiline is allowed\n", 1);
+			g_ret = 1;
 			line = NULL;
 		}
 		while ((s_line = split_line(line)) != NULL)

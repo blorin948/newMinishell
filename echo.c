@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 16:28:03 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 16:31:22 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:13:22 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int		echo_cmd(t_cmd *cmd)
 	int i;
 
 	i = 1;
+	g_ret = 0;
 	if (ft_strcmp(cmd->split[1], "-n") == 0)
 		i = 2;
 	while (cmd->split[i])
@@ -59,13 +60,16 @@ int		cd_cmd(t_cmd *cmd, t_env *env)
 	if (i == 1)
 	{
 		if (chdir(find_home(env)) != 0)
+		{
 			ft_putstr_fd("home missing\n", 1);
+			g_ret = 1;
+		}
 	}
-	if (i > 2)
+	if (i > 2 && (g_ret = 1))
 		ft_putstr_fd("to much arguments\n", 1);
 	if (i == 2)
 	{
-		if (chdir(cmd->split[1]) != 0)
+		if (chdir(cmd->split[1]) != 0 && (g_ret = 1))
 		{
 			ft_putstr_fd(cmd->split[1], 1);
 			ft_putstr_fd(" : No such file or directory\n", 1);

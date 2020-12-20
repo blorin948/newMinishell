@@ -1,8 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fonctions_annexe.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/15 18:15:58 by blorin            #+#    #+#             */
+/*   Updated: 2020/12/15 18:16:02 by blorin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int ft_strcmp(char *str1, char *str2)
+int		ft_strcmp(char *str1, char *str2)
 {
-	int i = 0;
+	int i;
+
+	i = 0;
 	if (str1 == NULL || str2 == NULL)
 		return (-1);
 	if (ft_strlen(str1) != ft_strlen(str2))
@@ -16,7 +30,7 @@ int ft_strcmp(char *str1, char *str2)
 	return (0);
 }
 
-int pass_hook(char *str, int i)
+int		pass_hook(char *str, int i)
 {
 	if (str[i] == '\'')
 	{
@@ -66,7 +80,7 @@ void	count_len(t_cmd *cmd, int i)
 	cmd->len = i - tmp;
 }
 
-char *replace_dollars(char *new)
+char	*replace_dollars(char *new)
 {
 	int a;
 

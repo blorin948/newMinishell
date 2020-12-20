@@ -6,14 +6,15 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:44:36 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 17:30:11 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:09:22 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			exec3(t_cmd *cmd, t_exec *exec, t_env *env)
+void		exec3(t_cmd *cmd, t_exec *exec, t_env *env)
 {
+	int status = 0;
 	if (exec->built > 0)
 	{
 		if (cmd->out == 3)
@@ -24,13 +25,18 @@ int			exec3(t_cmd *cmd, t_exec *exec, t_env *env)
 	}
 	dup2(exec->cpy, 1);
 	close(exec->cpy);
-	wait(NULL);
+	waitpid(exec->pid, &status, WUNTRACED);
+	if (env->is_fork == 1)
+	{
+		if (WIFEXITED(status))
+			g_ret = WEXITSTATUS(status);
+	}
 	close(exec->p[1]);
 	exec->fd_in = exec->p[0];
 	exec->built = 0;
 }
 
-int			exec2(t_cmd *cmd, t_exec *exec, t_env *env)
+void		exec2(t_cmd *cmd, t_exec *exec, t_env *env)
 {
 	exec->cpy = dup(1);
 	exec->i = 0;
@@ -42,7 +48,6 @@ int			exec2(t_cmd *cmd, t_exec *exec, t_env *env)
 		dup2(cmd->fd, 1);
 	else if (cmd->next != NULL)
 		dup2(exec->p[1], 1);
-	ok = 1;
 	close(exec->p[0]);
 	execve(cmd->split[0], cmd->split, env->env_tab);
 	create_path(env, cmd);
@@ -52,7 +57,7 @@ int			exec2(t_cmd *cmd, t_exec *exec, t_env *env)
 	ft_putstr_fd("command not found : ", 1);
 	ft_putstr_fd(cmd->split[0], 1);
 	ft_putstr_fd("\n", 1);
-	exit(0);
+	exit(127);
 }
 
 t_exec		*init_exec(void)
@@ -84,9 +89,12 @@ int			exec(t_env *env)
 		exec->built = is_builtin(cmd);
 		if (exec->built == 0 && (g_sig = 1))
 		{
+			env->is_fork = 1;
 			if ((exec->pid = fork()) == -1)
 				return (0);
 		}
+		else
+			env->is_fork = 0;
 		exec->cpy = dup(1);
 		if (exec->pid == 0 && exec->built == 0)
 			exec2(cmd, exec, env);

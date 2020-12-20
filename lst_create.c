@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 18:16:42 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/13 20:03:25 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:39:51 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,30 @@ void	check_token_error(t_env *env)
 				c++;
 			i++;
 		}
-		i = 0;
-		if (c == 0)
+		if (c == 0 && new->nb != 0)
 		{
 			env->ex++;
-			if (env->ex == 1)
+			if (env->ex == 1 && (g_ret = 1))
 				ft_putstr_fd("syntax error near unexpected token `|'\n", 1);
 		}
+		i = 0;
 		c = 0;
 		new = new->next;
+	}
+}
+
+void	add_nb(t_env *env)
+{
+	t_cmd *cmd;
+	int i;
+
+	i = 0;
+	cmd = env->cmd;
+	while (cmd)
+	{
+		cmd->nb = i;
+		i++;
+		cmd = cmd->next;
 	}
 }
 
@@ -89,5 +104,6 @@ void	split_words(char *line, t_env *env)
 			i++;
 	}
 	line_cpy(create_cmd(env), line, i, start);
+	add_nb(env);
 	check_token_error(env);
 }

@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:47:15 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 17:48:06 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:33:38 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ t_cmd			*init_cmd(void)
 	new->in_len = 0;
 	new->id = 0;
 	new->pipefd = NULL;
+	new->nb = 0;
 	new->fd_in = 0;
 	new->newpath = NULL;
 	new->redi_in = NULL;

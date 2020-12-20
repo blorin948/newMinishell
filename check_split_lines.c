@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:34:24 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 20:30:52 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:26:37 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int		check_in_fd(t_cmd *cmd)
 			ft_putstr_fd("no such file or directory: ", 1);
 			ft_putstr_fd(get_name(cmd->redi_in[i], '<'), 1);
 			ft_putstr_fd("\n", 1);
+			g_ret = 1;
 			return (1);
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:28:20 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 17:33:27 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:42:21 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,7 @@ void	check_in_out(t_cmd *cmd, t_env *env)
 		while (cmd->redi_out[i])
 		{
 			if (ft_strlen(get_name(cmd->redi_out[i], '>')) == 0)
-			{
-				printf("error\n");
 				env->ex++;
-			}
 			i++;
 		}
 	}

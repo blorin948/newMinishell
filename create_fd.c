@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:08:34 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 16:34:11 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:27:53 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		check_error_redir(char **tab)
 		if (i != 1 && i != 2)
 		{
 			ft_putstr_fd("parse error near '>'\n", 1);
+			g_ret = 258;
 			return (0);
 		}
 		a++;
@@ -106,12 +107,13 @@ int		create_fd(t_cmd *cmd, t_env *env)
 	cmd->out = 3;
 	if (check_error_redir(cmd->redi_out) == 0)
 	{
-		env->ex = 1;
+		env->ex++;
 		return (0);
 	}
 	if (create_fd2(cmd, a) == 0)
 	{
 		ft_putstr_fd("Error with FD opening\n", 1);
+		g_ret = 1;
 		env->ex++;
 	}
 	return (1);

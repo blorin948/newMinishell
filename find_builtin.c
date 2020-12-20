@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:30:53 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 17:31:45 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 17:25:29 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	env_cmd(t_cmd *cmd, t_env *env)
 	int		i;
 	t_envir	*envir;
 
+	g_ret = 0;
 	envir = env->envir;
 	i = 0;
 	while (envir)
