@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:14:03 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 18:14:39 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 18:32:42 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ char	*fill_export2(char *str, int i)
 	if (c > 0)
 		new[a++] = '"';
 	new[a] = '\0';
+	free(str);
 	return (new);
 }
 

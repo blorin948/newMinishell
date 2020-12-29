@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:44:36 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:09:22 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 15:22:25 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ void		exec2(t_cmd *cmd, t_exec *exec, t_env *env)
 	while (cmd->newpath[exec->i])
 		execve(cmd->newpath[exec->i++], cmd->split, env->env_tab);
 	dup2(exec->cpy, 1);
-	ft_putstr_fd("command not found : ", 1);
-	ft_putstr_fd(cmd->split[0], 1);
-	ft_putstr_fd("\n", 1);
+	ft_printf("command not found : %s\n", cmd->split[0]);
 	exit(127);
 }
 
@@ -103,5 +101,6 @@ int			exec(t_env *env)
 		cmd = cmd->next;
 		g_sig = 0;
 	}
+	free(exec);
 	return (0);
 }

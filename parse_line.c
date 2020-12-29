@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:28:20 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:42:21 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 15:19:38 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,26 @@ void	add_id(t_env *env)
 void	check_in_out(t_cmd *cmd, t_env *env)
 {
 	int i;
+	char *name;
 
 	i = 0;
-	if (cmd->id == 1 && cmd->id != env->nbr)
+	if (cmd->id == 0 && cmd->id != env->nbr)
 		cmd->out = 2;
-	if (cmd->id != 1 && cmd->id != env->nbr)
+	if (cmd->id != 0 && cmd->id != env->nbr)
 	{
 		cmd->out = 2;
 		cmd->in = 2;
 	}
-	if (cmd->id != 1 && cmd->id == env->nbr)
+	if (cmd->id != 0 && cmd->id == env->nbr)
 		cmd->in = 2;
 	if (cmd->out_len > 0)
 	{
 		while (cmd->redi_out[i])
 		{
-			if (ft_strlen(get_name(cmd->redi_out[i], '>')) == 0)
+			name = get_name(cmd->redi_out[i], '>');
+			if (ft_strlen(name) == 0)
 				env->ex++;
+			free(name);
 			i++;
 		}
 	}

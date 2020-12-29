@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 19:04:11 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:33:24 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/20 19:17:21 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ typedef struct	s_cmd
 	int				in;
 	char			**redi_in;
 	char			**redi_out;
-	char			**rest;
 	int				*pipefd;
 	int				out;
 	int				len;

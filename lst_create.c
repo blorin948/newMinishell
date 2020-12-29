@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 18:16:42 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:39:51 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 14:03:53 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,5 @@ void	split_words(char *line, t_env *env)
 	line_cpy(create_cmd(env), line, i, start);
 	add_nb(env);
 	check_token_error(env);
+	free(line);
 }

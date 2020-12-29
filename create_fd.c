@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:08:34 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:27:53 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 16:31:06 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,28 +68,30 @@ char	*get_name(char *str, char c)
 
 int		create_fd2(t_cmd *cmd, int a)
 {
+	char *name;
+	char *tmp;
 	while (a < cmd->out_len - 1)
 	{
+		name = get_name(cmd->redi_out[a], '>');
 		if (is_double(cmd->redi_out[a]) == 0)
 		{
-			if ((open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT |
-			O_TRUNC, S_IRWXU) == -1))
+			if ((open(name, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU) == -1))
 				return (0);
 		}
 		else
 		{
-			if (open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT |
-			O_APPEND, S_IRWXU) == -1)
+			if (open(name, O_RDWR | O_CREAT | O_APPEND, S_IRWXU) == -1)
 				return (0);
 		}
+		free(name);
 		a++;
 	}
+	name = get_name(cmd->redi_out[a], '>');
 	if (is_double(cmd->redi_out[a]) == 0)
-		cmd->fd = open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT |
-		O_TRUNC, S_IRWXU);
+		cmd->fd = open(name, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
 	else
-		cmd->fd = (open(get_name(cmd->redi_out[a], '>'), O_RDWR | O_CREAT
-		| O_APPEND, S_IRWXU));
+		cmd->fd = open(name, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+	free(name);
 	if (cmd->fd == -1)
 		return (0);
 	return (1);

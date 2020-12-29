@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 21:03:21 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/14 20:40:26 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 14:20:59 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ t_norm_fucker	*malloc_struct(void)
 char			*split_rest2(char *str)
 {
 	t_norm_fucker *s;
+	char *free_tmp;
 
 	s = malloc_struct();
 	while (str[s->i] && (s->tmp[0] = str[s->i]))
 	{
+		free_tmp = s->line2;
 		if (str[s->i] == '"' && s->guillemetd == 0 && s->guillemets == 0)
 			s->guillemetd = 1;
 		else if (str[s->i] == '"')
@@ -50,8 +52,13 @@ char			*split_rest2(char *str)
 			s->line2 = ft_strjoin(s->line2, s->tmp);
 		else if (str[s->i] == 39 && s->guillemetd == 1 && (s->tmp[0] = 39))
 			s->line2 = ft_strjoin(s->line2, s->tmp);
+		else
+			free_tmp = ft_strdup("");
+		free(free_tmp);
 		s->i++;
 	}
+	free(str);
+	free(s);
 	return (s->line2);
 }
 
@@ -110,17 +117,20 @@ int				split_rest(t_cmd *cmd)
 	char	*new;
 	int		i;
 	int		a;
+	char *tmp;
 
 	i = 0;
 	a = 0;
 	if (!(new = malloc(sizeof(char) * cmd->len)))
 		return (0);
-	new = split_rest3(cmd->line, new, a, i);
+	split_rest3(cmd->line, new, a, i);
 	new = split_rest2(new);
+	tmp = cmd->line;
 	cmd->line = new;
+	free(tmp);
 	cmd->split = NULL;
 	cmd->split = ft_split(new, ' ');
 	i = 0;
-	cmd->split = remake(cmd->split);
+	remake(cmd->split);
 	return (1);
 }

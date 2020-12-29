@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:34:24 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:26:37 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 15:33:02 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,28 @@ int		check_in_fd(t_cmd *cmd)
 {
 	int			i;
 	struct stat	s;
+	char *name;
 
 	i = 0;
 	if (cmd->in_len < 1)
 		return (0);
 	while (cmd->redi_in[i])
 	{
-		if (stat(get_name(cmd->redi_in[i], '<'), &s) == -1)
+		name = get_name(cmd->redi_in[i], '<');
+		if (stat(name, &s) == -1)
 		{
-			ft_putstr_fd("no such file or directory: ", 1);
-			ft_putstr_fd(get_name(cmd->redi_in[i], '<'), 1);
-			ft_putstr_fd("\n", 1);
+			ft_printf("no such file or directory: %s\n", name);
 			g_ret = 1;
+			free(name);
 			return (1);
 		}
+		free(name);
 		i++;
 	}
 	i--;
-	cmd->fd_in = open(get_name(cmd->redi_in[i], '<'), O_RDONLY, S_IRWXU);
+	name = get_name(cmd->redi_in[i], '<');
+	cmd->fd_in = open(name, O_RDONLY, S_IRWXU);
+	free(name);
 	return (0);
 }
 

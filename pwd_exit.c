@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:32:05 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:47:37 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 15:04:31 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,43 @@ void	pwd_cmd(t_cmd *cmd)
 	ft_putstr_fd("\n", 1);
 }
 
+void	free_export2(t_env *env)
+{
+	t_export *tmp;
+
+	while (env->export)
+	{
+		tmp = env->export;
+		env->export = env->export->next;
+		free(tmp->str);
+		free(tmp->name);
+		free(tmp->content);
+		free(tmp);
+	}
+	env->export = NULL;
+}
+
+void	free_envir2(t_env *env)
+{
+	t_envir *tmp;
+	while (env->envir)
+	{
+		tmp = env->envir;
+		env->envir = env->envir->next;
+		free(tmp->name);
+		free(tmp->content);
+		free(tmp);
+	}
+	env->envir = NULL;
+}
+
 int		exit_cmd(t_env *env)
 {
+	free_export2(env);
+	free_envir2(env);
+/*	while (1)
+	{
+		
+	}*/
 	exit(0);
 }

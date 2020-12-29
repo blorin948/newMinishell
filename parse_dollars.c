@@ -6,30 +6,11 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 19:14:52 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 19:00:13 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 16:58:57 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int		comp_var2(char *str, char *var)
-{
-	int i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	if (i != ft_strlen(var))
-		return (0);
-	i = 0;
-	while (str[i] && str[i] != '=')
-	{
-		if (str[i] != var[i])
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 char	*comp_var(char *var, t_env *env)
 {
@@ -74,23 +55,30 @@ char	*get_var(char *cmd, int i, t_env *env)
 	while (cmd[i] && ft_isalpha(cmd[i]) == 1)
 		var[a++] = cmd[i++];
 	var2 = comp_var(var, env);
+	free(var);
 	return (var2);
 }
 
 char	*parse_dollars2(char *str, int *i, char *new, t_env *env)
 {
 	char tmp[2];
+	char *tmp_free = NULL;
+	char *tmp2 = NULL;
 
 	tmp[1] = '\0';
 	*i = *i + 1;
 	if (str[*i] == '?')
 	{
-		new = ft_strjoin(new, ft_itoa(g_ret));
+		tmp_free = new;
+		tmp2 = ft_itoa(g_ret);
+		new = ft_strjoin(new, tmp2);
 		*i = *i + 1;
 	}
 	else if ((ft_isalpha(str[*i]) == 1))
 	{
-		new = ft_strjoin(new, get_var(str, *i, env));
+		tmp_free = new;
+		tmp2 = get_var(str, *i, env);
+		new = ft_strjoin(new, tmp2);
 		while (ft_isalpha(str[*i]) == 1)
 			*i = *i + 1;
 	}
@@ -99,8 +87,13 @@ char	*parse_dollars2(char *str, int *i, char *new, t_env *env)
 	else if (str[*i] != '\'' && str[*i] != '"')
 	{
 		tmp[0] = '$';
+		tmp_free = new;
 		new = ft_strjoin(new, tmp);
 	}
+	if (tmp_free)
+		free(tmp_free);
+	if (tmp2)
+		free(tmp2);
 	return (new);
 }
 
@@ -109,6 +102,7 @@ char	*parse_dollars(t_cmd *cmd, t_env *env, int i)
 	char	*new;
 	int		cro;
 	char	tmp[2];
+	char *tmp_free;
 
 	cro = 0;
 	tmp[1] = '\0';
@@ -126,7 +120,12 @@ char	*parse_dollars(t_cmd *cmd, t_env *env, int i)
 			new = parse_dollars2(cmd->line, &i, new, env);
 		tmp[0] = cmd->line[i];
 		if (cmd->line[i] != '$' || cro == 1)
+		{
+			tmp_free = new;
 			new = ft_strjoin(new, tmp);
+			if (new)
+				free(tmp_free);
+		}
 		if (cmd->line[i] != '$' || cro == 1)
 			i++;
 	}

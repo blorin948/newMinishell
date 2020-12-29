@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:50:47 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:15:55 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 17:22:34 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,29 @@ int		is_valid(char *str)
 int		envir_cmd2(t_cmd *cmd, t_env *env, int i)
 {
 	t_envir *envir;
+	char *name;
+	char *content;
 
 	envir = env->envir;
 	if (is_char(cmd->split[i], '=') == 0)
 		return (0);
 	if (is_valid(cmd->split[i]) == 0)
 	{
-		if (is_already_envir(envir, find_name(cmd->split[i])) == 0)
+		name = find_name(cmd->split[i]);
+		if (is_already_envir(envir, name) == 0)
 			fill_envir(create_envir(env), cmd->split[i]);
 		else
 		{
-			while (ft_strcmp(find_name(cmd->split[i]), envir->name) != 0)
+			while (ft_strcmp(name, envir->name) != 0)
 				envir = envir->next;
-			if (find_content(cmd->split[i]) == NULL)
+			if ((content = find_content(cmd->split[i])) == NULL)
+			{
 				return (0);
-			envir->content = find_content(cmd->split[i]);
-			envir->name = find_name(cmd->split[i]);
+			}
+			envir->content = content;
+			envir->name = name;
 		}
+		//free(name);
 	}
 	else
 		return (1);
@@ -58,16 +64,18 @@ int		export_cmd2(t_cmd *cmd, t_env *env, int i)
 {
 	t_export	*export;
 	int			a;
+	char *name;
 
 	a = 0;
 	export = env->export;
 	if (is_valid(cmd->split[i]) == 0)
 	{
-		if (is_already(export, find_name(cmd->split[i])) == 0)
+		name = find_name(cmd->split[i]);
+		if (is_already(export, name) == 0)
 			fill_export(create_export(env), cmd->split[i]);
 		else
 		{
-			while (ft_strcmp(find_name(cmd->split[i]), export->name) != 0)
+			while (ft_strcmp(name, export->name) != 0)
 				export = export->next;
 			if (find_content(cmd->split[i]) == NULL)
 				return (0);
@@ -75,6 +83,7 @@ int		export_cmd2(t_cmd *cmd, t_env *env, int i)
 			export->str = fill_export2(ft_strjoin("declare -x ",
 			cmd->split[i]), a);
 		}
+		free(name);
 	}
 	else
 		return (1);

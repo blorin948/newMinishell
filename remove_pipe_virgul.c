@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 18:23:16 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/13 19:05:27 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 15:20:07 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char	*remove_pipe2(char *line, int in, int out, int len)
 		new = remove_pipe3(out, line, len, in);
 	else
 		return (line);
+	free(line);
 	return (new);
 }
 
@@ -119,6 +120,7 @@ char	*remove_virgul2(char *line, int in, int out, int len)
 		new = remove_virgul3(line, in, out, len);
 	else
 		return (line);
+	free(line);
 	return (new);
 }
 

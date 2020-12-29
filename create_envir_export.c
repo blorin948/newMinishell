@@ -6,13 +6,13 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 16:34:49 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 17:00:09 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2020/12/29 17:19:37 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*find_name(char *str)
+char	* find_name(char *str)
 {
 	char	*new;
 	int		i;
