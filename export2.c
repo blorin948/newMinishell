@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:50:47 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 17:22:34 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/08 14:33:52 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ int		envir_cmd2(t_cmd *cmd, t_env *env, int i)
 	{
 		name = find_name(cmd->split[i]);
 		if (is_already_envir(envir, name) == 0)
+		{
 			fill_envir(create_envir(env), cmd->split[i]);
+			free(name);
+		}
 		else
 		{
 			while (ft_strcmp(name, envir->name) != 0)
@@ -53,7 +56,6 @@ int		envir_cmd2(t_cmd *cmd, t_env *env, int i)
 			envir->content = content;
 			envir->name = name;
 		}
-		//free(name);
 	}
 	else
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 16:28:03 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:13:22 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/08 14:19:21 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ int		echo_cmd(t_cmd *cmd)
 
 	i = 1;
 	g_ret = 0;
-	if (ft_strcmp(cmd->split[1], "-n") == 0)
-		i = 2;
+	while (ft_strcmp(cmd->split[i], "-n") == 0)
+		i++;
 	while (cmd->split[i])
 	{
 		ft_putstr_fd(cmd->split[i++], 1);
