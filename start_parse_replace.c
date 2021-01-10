@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:46:49 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 15:08:41 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:39:51 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	parse_all(t_env *env)
 {
 	t_cmd	*cmd;
 	int		i;
-	char *tmp;
+	char	*tmp;
 
 	i = 0;
 	cmd = env->cmd;

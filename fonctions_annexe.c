@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:15:58 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/15 18:16:02 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:54:25 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,25 @@ char	*replace_dollars(char *new)
 		a++;
 	}
 	return (new);
+}
+
+char	**remake(char **tab)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (tab[i])
+	{
+		while (tab[i][j])
+		{
+			if (tab[i][j] == '\a')
+				tab[i][j] = ' ';
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	return (tab);
 }

@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:34:24 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 15:33:02 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:06:22 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		check_in_fd(t_cmd *cmd)
 {
 	int			i;
 	struct stat	s;
-	char *name;
+	char		*name;
 
 	i = 0;
 	if (cmd->in_len < 1)

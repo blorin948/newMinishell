@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:28:20 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 15:19:38 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:37:43 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	add_id(t_env *env)
 
 void	check_in_out(t_cmd *cmd, t_env *env)
 {
-	int i;
-	char *name;
+	int		i;
+	char	*name;
 
 	i = 0;
 	if (cmd->id == 0 && cmd->id != env->nbr)

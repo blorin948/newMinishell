@@ -6,17 +6,18 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/20 15:39:07 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 16:46:31 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:18:15 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_split(t_cmd *cmd)
+void	free_split(t_cmd *cmd)
 {
-	int i = 0;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
+	i = 0;
 	while (cmd->split && cmd->split[i])
 	{
 		free(cmd->split[i]);
@@ -35,11 +36,12 @@ void free_split(t_cmd *cmd)
 		free(cmd->newpath);
 }
 
-void free_redir(t_cmd *cmd)
+void	free_redir(t_cmd *cmd)
 {
-	int i = 0;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
+	i = 0;
 	while (cmd->redi_in && cmd->redi_in[i])
 	{
 		free(cmd->redi_in[i]);

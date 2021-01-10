@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:08:34 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 16:31:06 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:17:05 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,8 @@ char	*get_name(char *str, char c)
 	return (new);
 }
 
-int		create_fd2(t_cmd *cmd, int a)
+int		create_fd2(t_cmd *cmd, int a, char *name)
 {
-	char *name;
-	char *tmp;
 	while (a < cmd->out_len - 1)
 	{
 		name = get_name(cmd->redi_out[a], '>');
@@ -83,8 +81,8 @@ int		create_fd2(t_cmd *cmd, int a)
 			if (open(name, O_RDWR | O_CREAT | O_APPEND, S_IRWXU) == -1)
 				return (0);
 		}
-		free(name);
 		a++;
+		free(name);
 	}
 	name = get_name(cmd->redi_out[a], '>');
 	if (is_double(cmd->redi_out[a]) == 0)
@@ -99,7 +97,8 @@ int		create_fd2(t_cmd *cmd, int a)
 
 int		create_fd(t_cmd *cmd, t_env *env)
 {
-	int a;
+	int		a;
+	char	*name;
 
 	a = 0;
 	if (!(cmd->redi_out))
@@ -112,7 +111,7 @@ int		create_fd(t_cmd *cmd, t_env *env)
 		env->ex++;
 		return (0);
 	}
-	if (create_fd2(cmd, a) == 0)
+	if (create_fd2(cmd, a, name) == 0)
 	{
 		ft_putstr_fd("Error with FD opening\n", 1);
 		g_ret = 1;

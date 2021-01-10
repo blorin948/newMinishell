@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 18:16:42 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 14:03:53 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:39:18 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ void	check_token_error(t_env *env)
 
 void	add_nb(t_env *env)
 {
-	t_cmd *cmd;
-	int i;
+	t_cmd	*cmd;
+	int		i;
 
 	i = 0;
 	cmd = env->cmd;

@@ -1,5 +1,3 @@
-#include "minishell.h"
-
 ctrcl-c SIGINT = 130
 ctrcl-\ SIGQUIT = 131 
 ctrcl-d END OF FILE

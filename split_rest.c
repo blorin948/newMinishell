@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 21:03:21 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 14:20:59 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:53:34 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,26 @@ t_norm_fucker	*malloc_struct(void)
 	return (s);
 }
 
+void			split_rest2_1(t_norm_fucker *s, char *free_tmp, char *str)
+{
+	if (str[s->i] == ' ' && (s->guillemetd == 1 || s->guillemets == 1)
+	&& (s->tmp[0] = '\a'))
+		s->line2 = ft_strjoin(s->line2, s->tmp);
+	else if (str[s->i] != '"' && str[s->i] != 39 && (s->tmp[0] = str[s->i]))
+		s->line2 = ft_strjoin(s->line2, s->tmp);
+	else if (str[s->i] == '"' && s->guillemets == 1 && (s->tmp[0] = '"'))
+		s->line2 = ft_strjoin(s->line2, s->tmp);
+	else if (str[s->i] == 39 && s->guillemetd == 1 && (s->tmp[0] = 39))
+		s->line2 = ft_strjoin(s->line2, s->tmp);
+	else
+		free_tmp = ft_strdup("");
+	free(free_tmp);
+}
+
 char			*split_rest2(char *str)
 {
-	t_norm_fucker *s;
-	char *free_tmp;
+	t_norm_fucker	*s;
+	char			*free_tmp;
 
 	s = malloc_struct();
 	while (str[s->i] && (s->tmp[0] = str[s->i]))
@@ -43,44 +59,12 @@ char			*split_rest2(char *str)
 			s->guillemets = 1;
 		else if (str[s->i] == 39)
 			s->guillemets = 0;
-		if (str[s->i] == ' ' && (s->guillemetd == 1 || s->guillemets == 1)
-		&& (s->tmp[0] = '\a'))
-			s->line2 = ft_strjoin(s->line2, s->tmp);
-		else if (str[s->i] != '"' && str[s->i] != 39 && (s->tmp[0] = str[s->i]))
-			s->line2 = ft_strjoin(s->line2, s->tmp);
-		else if (str[s->i] == '"' && s->guillemets == 1 && (s->tmp[0] = '"'))
-			s->line2 = ft_strjoin(s->line2, s->tmp);
-		else if (str[s->i] == 39 && s->guillemetd == 1 && (s->tmp[0] = 39))
-			s->line2 = ft_strjoin(s->line2, s->tmp);
-		else
-			free_tmp = ft_strdup("");
-		free(free_tmp);
+		split_rest2_1(s, free_tmp, str);
 		s->i++;
 	}
 	free(str);
 	free(s);
 	return (s->line2);
-}
-
-char			**remake(char **tab)
-{
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (tab[i])
-	{
-		while (tab[i][j])
-		{
-			if (tab[i][j] == '\a')
-				tab[i][j] = ' ';
-			j++;
-		}
-		j = 0;
-		i++;
-	}
-	return (tab);
 }
 
 char			*split_rest3(char *line, char *new, int a, int i)
@@ -117,7 +101,7 @@ int				split_rest(t_cmd *cmd)
 	char	*new;
 	int		i;
 	int		a;
-	char *tmp;
+	char	*tmp;
 
 	i = 0;
 	a = 0;

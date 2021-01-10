@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:32:05 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/08 14:25:22 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:38:26 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	free_export2(t_env *env)
 void	free_envir2(t_env *env)
 {
 	t_envir *tmp;
+
 	while (env->envir)
 	{
 		tmp = env->envir;
@@ -56,9 +57,5 @@ int		exit_cmd(t_env *env)
 {
 	free_export2(env);
 	free_envir2(env);
-	while (1)
-	{
-		
-	}
 	exit(0);
 }

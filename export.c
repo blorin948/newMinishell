@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:14:03 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 18:32:42 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:36:48 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,22 @@ int		is_already_envir(t_envir *envir, char *str)
 		envir = envir->next;
 	}
 	return (0);
+}
+
+int		envir_cmd3(t_cmd *cmd, t_envir *envir, int i, char *name)
+{
+	char *content;
+	char *tmp;
+
+	while (ft_strcmp(name, envir->name) != 0)
+		envir = envir->next;
+	if ((content = find_content(cmd->split[i])) == NULL)
+		return (0);
+	tmp = envir->content;
+	envir->content = content;
+	free(tmp);
+	tmp = envir->name;
+	envir->name = name;
+	free(tmp);
+	return (1);
 }

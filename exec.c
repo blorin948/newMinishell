@@ -6,15 +6,32 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:44:36 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/29 15:22:25 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 14:24:29 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int			exec4(t_cmd *cmd, t_exec *exec, t_env *env)
+{
+	pipe(exec->p);
+	exec->built = is_builtin(cmd);
+	if (exec->built == 0 && (g_sig = 1))
+	{
+		env->is_fork = 1;
+		if ((exec->pid = fork()) == -1)
+			return (0);
+	}
+	else
+		env->is_fork = 0;
+	return (1);
+}
+
 void		exec3(t_cmd *cmd, t_exec *exec, t_env *env)
 {
-	int status = 0;
+	int status;
+
+	status = 0;
 	if (exec->built > 0)
 	{
 		if (cmd->out == 3)
@@ -83,16 +100,8 @@ int			exec(t_env *env)
 	cmd = env->cmd;
 	while (cmd)
 	{
-		pipe(exec->p);
-		exec->built = is_builtin(cmd);
-		if (exec->built == 0 && (g_sig = 1))
-		{
-			env->is_fork = 1;
-			if ((exec->pid = fork()) == -1)
-				return (0);
-		}
-		else
-			env->is_fork = 0;
+		if (exec4(cmd, exec, env) == 0)
+			return (0);
 		exec->cpy = dup(1);
 		if (exec->pid == 0 && exec->built == 0)
 			exec2(cmd, exec, env);

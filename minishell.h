@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 19:04:11 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 19:17:21 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 15:56:16 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <sys/types.h>
 # include <signal.h>
 # include <sys/wait.h>
-#include <sys/types.h>
+# include <sys/types.h>
 # include <sys/stat.h>
 # include <math.h>
 # include <limits.h>
@@ -70,13 +70,21 @@ typedef struct	s_export
 
 typedef struct	s_exec
 {
-	int i;
-	int built;
-	int fd_in;
-	pid_t pid;
-	int cpy;
-	int p[2];
+	int		i;
+	int		built;
+	int		fd_in;
+	pid_t	pid;
+	int		cpy;
+	int		p[2];
 }				t_exec;
+
+typedef struct	s_dollars
+{
+	char tmp[2];
+	char *tmp_free;
+	char *tmp2;
+	char *str;
+}				t_dollars;
 
 typedef struct	s_cmd
 {
@@ -119,7 +127,9 @@ char			*split_line(char *str);
 char			*get_name(char *str, char c);
 void			create_envir_export(t_env *env, char **tab);
 t_envir			*create_envir(t_env *env);
+int				envir_cmd3(t_cmd *cmd, t_envir *envir, int i, char *name);
 void			display_prompt(void);
+char			**remake(char **tab);
 void			fill_export(t_export *export, char *str);
 void			fill_envir(t_envir *envir, char *str);
 t_envir			*init_envir(void);
@@ -139,6 +149,7 @@ int				create_path(t_env *env, t_cmd *cmd);
 t_export		*create_export(t_env *env);
 t_export		*init_export(void);
 t_cmd			*init_cmd(void);
+char			*comp_var(char *var, t_env *env);
 int				exec(t_env *env);
 void			pwd_cmd(t_cmd *cmd);
 void			free_all(t_env *env);
