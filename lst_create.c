@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 18:16:42 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 14:39:18 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/12 17:25:57 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 char	*line_cpy(t_cmd *cmd, char *line, int end, int start)
 {
-	char	*new;
 	int		i;
 
 	i = 0;
@@ -107,4 +106,6 @@ void	split_words(char *line, t_env *env)
 	add_nb(env);
 	check_token_error(env);
 	free(line);
+	if (env->ex > 0)
+		return ;
 }

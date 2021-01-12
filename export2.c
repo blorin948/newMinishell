@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:50:47 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 14:39:02 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/11 14:46:19 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ int		envir_cmd2(t_cmd *cmd, t_env *env, int i)
 {
 	t_envir *envir;
 	char	*name;
-	char	*content;
-	char	*tmp;
 
 	envir = env->envir;
 	if (is_char(cmd->split[i], '=') == 0)
@@ -86,8 +84,6 @@ int		export_cmd2(t_cmd *cmd, t_env *env, int i)
 {
 	t_export	*export;
 	char		*name;
-	char		*content;
-	char		*tmp;
 
 	export = env->export;
 	if (is_valid(cmd->split[i]) == 0)

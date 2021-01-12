@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:17:36 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/08 14:24:48 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/12 17:16:56 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int		start_loop(t_env *env, char *s_line, char *line)
 		display_prompt();
 		if (get_next_line(0, &line) == 0)
 			exit(0);
+		line = parse_antislash(line, env);
 		if (check_hook(line) != 0)
 		{
 			ft_putstr_fd("No multiline is allowed\n", 1);
@@ -72,12 +73,15 @@ int		main(int ac, char **av, char **envir)
 
 	line = NULL;
 	s_line = NULL;
+	(void)ac;
+	(void)av;
 	if (!(env = malloc(sizeof(t_env))))
 		return (0);
 	env->cmd = NULL;
 	env->envir = NULL;
 	env->export = NULL;
 	env->env_tab = envir;
+	env->slash = NULL;
 	g_sig = 0;
 	g_ret = 0;
 	create_envir_export(env, envir);

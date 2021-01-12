@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:30:53 by blorin            #+#    #+#             */
-/*   Updated: 2020/12/20 17:25:29 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/11 14:43:29 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		is_builtin(t_cmd *cmd)
 	return (0);
 }
 
-void	env_cmd(t_cmd *cmd, t_env *env)
+void	env_cmd(t_env *env)
 {
 	int		i;
 	t_envir	*envir;
@@ -56,13 +56,13 @@ int		find_builtin(t_cmd *cmd, t_env *env)
 	if (ft_strcmp(cmd->split[0], "export") == 0)
 		export_cmd(cmd, env);
 	if (ft_strcmp(cmd->split[0], "env") == 0)
-		env_cmd(cmd, env);
+		env_cmd(env);
 	if (ft_strcmp(cmd->split[0], "cd") == 0)
 		cd_cmd(cmd, env);
 	if (ft_strcmp(cmd->split[0], "unset") == 0)
 		unset_cmd(cmd, env);
 	if (ft_strcmp(cmd->split[0], "pwd") == 0)
-		pwd_cmd(cmd);
+		pwd_cmd();
 	if (ft_strcmp(cmd->split[0], "exit") == 0)
 		exit_cmd(env);
 	return (1);

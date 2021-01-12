@@ -6,13 +6,13 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:29:29 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 15:55:34 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/11 14:41:05 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	create_path2(t_env *env, t_cmd *cmd, int i, char *tmp)
+void	create_path2(t_cmd *cmd, int i, char *tmp)
 {
 	while (cmd->newpath[i])
 	{
@@ -32,6 +32,7 @@ int		create_path(t_env *env, t_cmd *cmd)
 	t_envir	*envir;
 	char	*tmp;
 
+	tmp = NULL;
 	i = 0;
 	envir = env->envir;
 	while (envir)
@@ -47,7 +48,7 @@ int		create_path(t_env *env, t_cmd *cmd)
 	}
 	i = 0;
 	cmd->newpath = ft_split(envir->content, ':');
-	create_path2(env, cmd, i, tmp);
+	create_path2(cmd, i, tmp);
 	return (0);
 }
 

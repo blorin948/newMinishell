@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:46:49 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 14:39:51 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/12 17:24:21 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,7 @@ void	parse_all(t_env *env)
 	int		i;
 	char	*tmp;
 
-	i = 0;
 	cmd = env->cmd;
-	if (env->ex > 0)
-		return ;
 	add_id(env);
 	while (cmd)
 	{
@@ -70,9 +67,13 @@ void	parse_all(t_env *env)
 		replace(cmd);
 		check_in_out(cmd, env);
 		create_fd(cmd, env);
-		if (check_in_fd(cmd) == 1)
+		if ((i = 0) && check_in_fd(cmd) == 1)
 			env->ex++;
+		while (cmd->split[i])
+		{
+			cmd->split[i] = reverse_slash(cmd->split[i], env);
+			i++;
+		}
 		cmd = cmd->next;
-		i = 0;
 	}
 }

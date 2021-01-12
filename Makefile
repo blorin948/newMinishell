@@ -1,3 +1,4 @@
+$(VERBOSE).SILENT:
 
 NAME =	minishell
 
@@ -5,34 +6,35 @@ LIBFT =	./libft/libft.a
 
 PRINTF = ./ft_printf/libftprintf.a
 
-FLAGS = gcc
+FLAGS = gcc -Wall -Werror -Wextra
 
 HEADERS = minishell.h
 
-SRC =	main.c\
-		get_next_line.c\
+SRC =	check_split_lines.c\
 		create.c\
-		init.c\
-		exec.c\
+		create_envir_export.c\
+		create_fd.c\
 		create_path.c\
+		create_tab_redir.c\
+		echo.c\
+		exec.c\
+		exit_free.c\
+		export.c\
+		export2.c\
 		find_builtin.c\
 		fonctions_annexe.c\
-		echo.c\
-		export.c\
-		unset.c\
-		pwd_exit.c\
-		create_envir_export.c\
+		get_next_line.c\
+		init.c\
 		lst_create.c\
-		exit_free.c\
-		remove_pipe_virgul.c\
+		main.c\
 		parse_dollars.c\
-		create_tab_redir.c\
-		split_rest.c\
-		create_fd.c\
 		parse_line.c\
-		check_split_lines.c\
+		pwd_exit.c\
+		remove_pipe_virgul.c\
+		split_rest.c\
 		start_parse_replace.c\
-		export2.c
+		unset.c\
+		parse_antislash.c
 
 OBJ = $(patsubst %.c, obj/%.o, $(SRC))
 
@@ -40,34 +42,40 @@ all: $(NAME)
 
 $(OBJ): ${HEADERS}
 
-$(NAME): $(PRINTF) $(LIBFT) $(OBJ)
-	@echo "\n==> Making Minishell"
-	$(FLAGS) $(OBJ) $(PRINTF) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJ) libf printf
+	@echo "\n==>Making Minishell\n" 
+	@$(FLAGS) $(OBJ) $(LIBFT) $(PRINTF) -o $(NAME)
 
-$(LIBFT):
-	@echo "\n==> Making LIBFT"
-	make -C ./libft bonus
+libf:
+	@echo "\033[0;32m \n==> Making LIBFT"
+	@make -C ./libft bonus
 
-$(PRINTF):
-	@echo "\n==> Making printf"
-	make -C ./ft_printf
+printf:
+	@echo "\033[0;32m \n==> Making PRINTF"
+	@make -C ./ft_printf
 
 obj/%.o: %.c
-	mkdir -p obj
-	$(FLAGS) -c $< -o $@
+	@mkdir -p obj
+	@$(FLAGS) -c $< -o $@
 
 norme:
 	norminette *.c *.h
 
 run: $(NAME)
+	@echo "==>Run\n"
 	./minishell
 
 clean:
-	rm -rf obj
-	make -C ./libft clean
+	@echo "cleaning..."
+	@rm -rf obj
+	@make -C ./libft clean
+	@echo done
 
 fclean: clean
-	rm -rf $(NAME) obj
-	make -C ./libft fclean
+	@rm -rf $(NAME) obj
+	@make -C ./libft fclean
+	@make -C ./ft_printf fclean
 
 re: fclean all
+
+.PHONY:		all clean fclean re bonus run norme

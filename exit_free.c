@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/20 15:39:07 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 14:18:15 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/12 16:57:12 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	free_split(t_cmd *cmd)
 {
 	int		i;
-	char	*tmp;
 
 	i = 0;
 	while (cmd->split && cmd->split[i])
@@ -39,7 +38,6 @@ void	free_split(t_cmd *cmd)
 void	free_redir(t_cmd *cmd)
 {
 	int		i;
-	char	*tmp;
 
 	i = 0;
 	while (cmd->redi_in && cmd->redi_in[i])
@@ -72,4 +70,13 @@ void	free_all(t_env *env)
 		free(tmp);
 	}
 	env->cmd = NULL;
+}
+
+char	*free_tmp(char *tmp2, char *tmp_free, char *new)
+{
+	if (tmp_free)
+		free(tmp_free);
+	if (tmp2)
+		free(tmp2);
+	return (new);
 }

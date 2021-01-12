@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 19:04:11 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 15:56:16 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/12 17:21:01 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct	s_env
 	char			**env_tab;
 	int				ex;
 	int				is_fork;
+	char			*slash;
 	struct s_export *export;
 }				t_env;
 
@@ -151,15 +152,18 @@ t_export		*init_export(void);
 t_cmd			*init_cmd(void);
 char			*comp_var(char *var, t_env *env);
 int				exec(t_env *env);
-void			pwd_cmd(t_cmd *cmd);
+void			pwd_cmd();
 void			free_all(t_env *env);
 void			split_words(char *line, t_env *env);
+char			*free_tmp(char *tmp2, char *tmp_free, char *new);
 int				pass_hook(char *str, int i);
+char			*parse_antislash(char *line, t_env *env);
 char			*replace_dollars(char *new);
 char			**create_tab_redir(t_cmd *cmd, int len, char redir);
 int				count_len2(char *line, int i);
 void			count_len(t_cmd *cmd, int i);
 int				split_rest(t_cmd *cmd);
+char			*reverse_slash(char *line, t_env *env);
 int				exit_cmd(t_env *env);
 t_cmd			*create_cmd(t_env *env);
 

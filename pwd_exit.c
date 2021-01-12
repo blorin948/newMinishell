@@ -6,13 +6,13 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:32:05 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 14:38:26 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/12 16:57:48 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pwd_cmd(t_cmd *cmd)
+void	pwd_cmd(void)
 {
 	char str[PATH_MAX];
 

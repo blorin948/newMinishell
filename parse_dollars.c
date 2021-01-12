@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 19:14:52 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 15:55:28 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/12 15:53:04 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,27 @@ char	*get_var(char *cmd, int i, t_env *env)
 
 	a = 0;
 	tmp = i;
-	while (cmd[i] && ft_isalpha(cmd[i]) == 1)
+	while (cmd[i] && (ft_isalpha(cmd[i]) == 1 || cmd[i] == '_'))
 		i++;
 	if (!(var = malloc(sizeof(char) * (i - tmp + 1))))
 		return (NULL);
 	i = tmp;
-	while (cmd[i] && ft_isalpha(cmd[i]) == 1)
+	while (cmd[i] && (ft_isalpha(cmd[i]) == 1 || cmd[i] == '_'))
 		var[a++] = cmd[i++];
+	var[a] = '\0';
 	var2 = comp_var(var, env);
 	free(var);
 	return (var2);
 }
 
-void	parse_dollars3(char *tmp, char *tmp_free, char *new, char *tmp2)
+char	*parse_dollars3(char *tmp, char *tmp_free, char *new)
 {
 	tmp[0] = '$';
+	tmp[1] = '\0';
 	tmp_free = new;
 	new = ft_strjoin(new, tmp);
-	if (tmp_free)
-		free(tmp_free);
-	if (tmp2)
-		free(tmp2);
+	free(tmp_free);
+	return (new);
 }
 
 char	*parse_dollars2(char *str, int *i, char *new, t_env *env)
@@ -69,8 +69,8 @@ char	*parse_dollars2(char *str, int *i, char *new, t_env *env)
 	else if (ft_isdigit(str[*i]) == 1)
 		*i = *i + 1;
 	else if (str[*i] != '\'' && str[*i] != '"')
-		parse_dollars3(tmp, tmp_free, new, tmp2);
-	return (new);
+		return (parse_dollars3(tmp, tmp_free, new));
+	return (free_tmp(tmp2, tmp_free, new));
 }
 
 int		get_crochet(t_cmd *cmd, int cro, int i)
@@ -101,14 +101,14 @@ char	*parse_dollars(t_cmd *cmd, t_env *env, int i)
 		if (cmd->line[i] == '$' && cro == 0 && (i = i + 1))
 			new = parse_dollars2(cmd->line, &i, new, env);
 		tmp[0] = cmd->line[i];
-		if (cmd->line[i] != '$' || cro == 1)
+		if (cmd->line[i] != '\0' && (cmd->line[i] != '$' || cro == 1))
 		{
 			tmp_free = new;
 			new = ft_strjoin(new, tmp);
 			if (new)
 				free(tmp_free);
 		}
-		if (cmd->line[i] != '$' || cro == 1)
+		if (cmd->line[i] != '\0' && (cmd->line[i] != '$' || cro == 1))
 			i++;
 	}
 	return (new);

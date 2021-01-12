@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:08:34 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/10 14:17:05 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/11 14:45:10 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int		create_fd(t_cmd *cmd, t_env *env)
 	int		a;
 	char	*name;
 
+	name = NULL;
 	a = 0;
 	if (!(cmd->redi_out))
 		return (1);
