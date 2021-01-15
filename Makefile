@@ -43,15 +43,15 @@ all: $(NAME)
 $(OBJ): ${HEADERS}
 
 $(NAME): $(OBJ) libf printf
-	@echo "\n==>Making Minishell\n" 
+	@echo "\n==> Making Minishell\n" 
 	@$(FLAGS) $(OBJ) $(LIBFT) $(PRINTF) -o $(NAME)
 
 libf:
-	@echo "\033[0;32m \n==> Making LIBFT"
+	@echo "\n==> Making LIBFT"
 	@make -C ./libft bonus
 
 printf:
-	@echo "\033[0;32m \n==> Making PRINTF"
+	@echo "\n==> Making PRINTF"
 	@make -C ./ft_printf
 
 obj/%.o: %.c
@@ -60,10 +60,6 @@ obj/%.o: %.c
 
 norme:
 	norminette *.c *.h
-
-run: $(NAME)
-	@echo "==>Run\n"
-	./minishell
 
 clean:
 	@echo "cleaning..."

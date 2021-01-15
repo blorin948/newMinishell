@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 19:04:11 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/12 17:21:01 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 17:03:11 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_env
 	int				ex;
 	int				is_fork;
 	char			*slash;
+	int				i;
 	struct s_export *export;
 }				t_env;
 

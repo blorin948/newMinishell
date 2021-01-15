@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:17:36 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/15 15:20:04 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 17:26:44 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,8 @@ void	signal_handler(int sig)
 	}
 }
 
-int		start_loop(t_env *env, char *s_line, char *line)
+void	start_loop(t_env *env, char *s_line, char *line)
 {
-	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
 	while (1)
 	{
@@ -46,14 +45,15 @@ int		start_loop(t_env *env, char *s_line, char *line)
 		display_prompt();
 		if (get_next_line(0, &line) == 0)
 			exit(0);
-		line = parse_antislash(line, env);
-		if (check_hook(line) != 0)
+		if (ft_strlen(line) != 0)
+			line = parse_antislash(line, env);
+		if (ft_strlen(line) != 0 && check_hook(line) != 0)
 		{
 			ft_putstr_fd("No multiline is allowed\n", 1);
 			g_ret = 1;
 			line = NULL;
 		}
-		while ((s_line = split_line(line)) != NULL)
+		while (ft_strlen(line) != 0 && (s_line = split_line(line)) != NULL)
 		{
 			split_words(s_line, env);
 			parse_all(env);
@@ -85,5 +85,6 @@ int		main(int ac, char **av, char **envir)
 	g_sig = 0;
 	g_ret = 0;
 	create_envir_export(env, envir);
+	signal(SIGINT, signal_handler);
 	start_loop(env, s_line, line);
 }

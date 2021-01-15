@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 17:46:49 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/12 17:24:21 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 17:04:40 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,27 +52,27 @@ void	replace(t_cmd *cmd)
 void	parse_all(t_env *env)
 {
 	t_cmd	*cmd;
-	int		i;
 	char	*tmp;
 
 	cmd = env->cmd;
 	add_id(env);
 	while (cmd)
 	{
+		env->i = 0;
 		remove_pipe_virgul(cmd);
 		tmp = cmd->line;
-		cmd->line = parse_dollars(cmd, env, i);
+		cmd->line = parse_dollars(cmd, env, env->i);
 		free(tmp);
 		parse_hook_split(cmd);
 		replace(cmd);
 		check_in_out(cmd, env);
 		create_fd(cmd, env);
-		if ((i = 0) && check_in_fd(cmd) == 1)
+		if ((env->i = 0) && check_in_fd(cmd) == 1)
 			env->ex++;
-		while (cmd->split[i])
+		while (cmd->split[env->i])
 		{
-			cmd->split[i] = reverse_slash(cmd->split[i], env);
-			i++;
+			cmd->split[env->i] = reverse_slash(cmd->split[env->i], env);
+			env->i++;
 		}
 		cmd = cmd->next;
 	}
