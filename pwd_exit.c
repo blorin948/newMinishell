@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:32:05 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/12 16:57:48 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 15:21:54 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,9 @@ int		exit_cmd(t_env *env)
 {
 	free_export2(env);
 	free_envir2(env);
+	while (1)
+	{
+		
+	}
 	exit(0);
 }

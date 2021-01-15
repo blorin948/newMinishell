@@ -6,7 +6,7 @@
 /*   By: blorin <blorin@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 19:17:36 by blorin            #+#    #+#             */
-/*   Updated: 2021/01/12 17:16:56 by blorin           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 15:20:04 by blorin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,4 @@ int		main(int ac, char **av, char **envir)
 	g_ret = 0;
 	create_envir_export(env, envir);
 	start_loop(env, s_line, line);
-	system("leaks checker");
 }
